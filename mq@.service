@@ -1,0 +1,21 @@
+[Unit]
+Description=mq service file
+After=network.target
+
+[Service]
+ExecStart=/bin/strmqm %I
+ExecStop=/bin/endmqm -i %I
+Type=forking
+#User=mqm
+#Group=mqm
+KillMode=none
+Restart=no
+SendSIGKILL=no
+TimeoutStartSec=0
+LimitNOFILE=10240
+LimitNPROC=4096
+
+[Install]
+WantedBy=default.target
+
+

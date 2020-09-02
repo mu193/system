@@ -1,0 +1,5 @@
+# start / stop only over systemd
+#
+#  systemctl start mq@{QMGR}.service  
+#  systemctl stop  mq@{QMGR}.service  
+#
