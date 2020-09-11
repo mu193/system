@@ -3,6 +3,7 @@ Description=mq service file
 After=network.target
 
 [Service]
+EnvironmentFile=/home/mqm/profile/%I.profile
 ExecStart=/bin/strmqm %I
 ExecStop=/bin/endmqm -i %I
 Type=forking
