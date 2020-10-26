@@ -24,7 +24,7 @@ systemd system files for starting and stopping mq
    
     for each queue manager:
 
-    cp /home/mqm/profile/_QMGR_.profile /home/mqm/profile/{QMGR}.profile
+    cp /home/mqm/sys/profile/_QMGR_.profile /home/mqm/profile/{QMGR}.profile
     edit /home/mqm/profile/{QMGR}.profile
  
     systemctl --user enable mq@{QMGR}.service 
