@@ -19,7 +19,7 @@ systemd system files for starting and stopping mq
     
     mkdir -p /home/mqm/.config/systemd/user
     cp mq@.service /home/mqm/.config/systemd/user
-    cp message /home/mqm/.config/systemd
+    cp message /home/mqm/.config
     cp user.profile /home/mqm/.profile
    
     for each queue manager:
