@@ -9,7 +9,7 @@ systemd system files for starting and stopping mq
   
     systemctl enable user@400.service  # for systems in Frankfurt
     systemctl enable user@4010.service # for systems in Luxemburg
-    system daemon-reload 
+    systemctl daemon-reload 
     systemctl start user@400.service   # for systems in Frankfurt
     systemctl start user@4010.service  # for systems in Luxemburg
 
@@ -18,6 +18,7 @@ systemd system files for starting and stopping mq
     as mqm:
     
     mkdir -p /home/mqm/.config/systemd/user
+    mkdir -p /home/mqm/profile
     cp mq@.service /home/mqm/.config/systemd/user
     cp message /home/mqm/.config
     cp user.profile /home/mqm/.profile
