@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=/home/mqm/profile/%I.profile
+ExecStartPre=/home/mqm/.config/systemd/xapass.pl -qmgr %I  
 ExecStart=/bin/strmqm %I
 ExecStop=/bin/endmqm -i %I
 Type=forking
