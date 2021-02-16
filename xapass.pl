@@ -84,7 +84,7 @@ $user = $cfgUser unless defined $user ;
 $env  = $cfgEnv  unless defined $env  ;
 
 $user = $ENV{USERNAME} if exists $ENV{USERNAME} ;
-$env  = $ENV{ENVNAME}  if exists $ENV{USERNAME} ;
+$env  = $ENV{ENVNAME}  if exists $ENV{ENVNAME} ;
 
 &usage() unless defined $user ;
 &usage() unless defined $env  ;
@@ -225,18 +225,8 @@ sub setPasswd
 #
 ################################################################################
 
-print "environment start\n" ;
-
-foreach my $key (keys %ENV)
-{
-  print "$key $ENV{$key}\n" ;
-}
-
-print "environment stop\n" ;
-
 my %qmIni = readQmIni $qmgr ;
 my $xaManager = $qmIni{XAResourceManager}{Name} ;
 my $passwd = getPasswd $user, $env ;
 setPasswd( $qmgr, $xaManager, $user, $passwd ) ;
-
 
