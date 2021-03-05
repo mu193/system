@@ -1,5 +1,9 @@
-# start / stop only over systemd
+
+cat << EOM
+
+#  start / stop only over systemd
 #
 #  systemctl --user start mq@{QMGR}.service  
 #  systemctl --user stop  mq@{QMGR}.service  
 #
+EOM

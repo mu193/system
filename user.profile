@@ -1,12 +1,3 @@
-strmqm() 
-{ 
-  cat ~/.config/message 
-}
-endmqm() 
-{ 
-  cat ~/.config/message 
-}
-
 # ------------------------------------------------------------------------------
 # systemd if real user id not mqm
 # ------------------------------------------------------------------------------
@@ -30,7 +21,7 @@ export MQPROMPT="+QMNAME+> "
 # ------------------------------------------------------------------------------
 # general usage of the shell
 # ------------------------------------------------------------------------------
-export PATH=$PATH:.
+export PATH=$HOME/.bin:$PATH:$HOME/bin:.
 export CDPATH=.:$HOME
 
 set -o vi
@@ -40,5 +31,5 @@ set -o vi
 # ------------------------------------------------------------------------------
 for prof in $HOME/.profile.d/*
 do
-  source $prof
+  [ $(echo "$prof" | grep -P '^disable\.') ] || source $prof
 done

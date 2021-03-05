@@ -1,0 +1,37 @@
+#!/bin/bash
+
+echo ""
+echo "My Command Line Installer"
+echo ""
+
+# Commands
+AWK=awk
+CD=cd
+MKDIR="mktemp -d "
+RM="rm -rf"
+TAIL=tail
+TAR=tar
+
+FILE=arch
+
+# Create destination folder
+TMP=$(${MKDIR} /tmp/selfextract.XXXXXX)
+
+
+# Find __ARCHIVE__ maker, read archive content and decompress it
+ARCHIVE=$(${AWK} '/^__ARCHIVE__/ {print NR + 1; exit 0; }' "${0}")
+${TAIL} -n+${ARCHIVE} "${0}"  > ${TMP}/${FILE}
+${CD} ${TMP}
+${TAR} -xvzf ${FILE}
+${RM} ${FILE}
+
+# Put your logic here (if you need)
+
+echo ""
+echo "Installation complete."
+echo ""
+
+# Exit from the script with success (0)
+exit 0
+
+__ARCHIVE__
