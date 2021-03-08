@@ -1,18 +1,18 @@
 #!/bin/bash 
 
-[ -d /home/mqm/.bin       ] || mkdir /home/mqm/.bin
-[ -d /home/mqm/bin        ] || mkdir /home/mqm/bin
-[ -d /home/mqm/system     ] || mkdir /home/mqm/system
-[ -d /home/mqm/cfg        ] || mkdir /home/mqm/cfg 
-[ -d /home/mqm/profile    ] || mkdir /home/mqm/profile
-[ -d /home/mqm/.profile.d ] || mkdir /home/mqm/.profile.d 
+[ -d /home/mqm/.bin         ] || mkdir /home/mqm/.bin
+[ -d /home/mqm/bin          ] || mkdir /home/mqm/bin
+[ -d /home/mqm/system       ] || mkdir /home/mqm/system
+[ -d /home/mqm/cfg          ] || mkdir /home/mqm/cfg 
+[ -d /home/mqm/qmgr.profile ] || mkdir /home/mqm/qmgr.profile
+[ -d /home/mqm/.profile.d   ] || mkdir /home/mqm/.profile.d 
 [ -d /home/mqm/.config/systemd/user ] || mkdir /home/mqm/.config/systemd/user 
 
 touch /home/mqm/.profile.d/empty
 cp user.profile   /home/mqm/.profile 
 cp uc4.logging    /home/mqm/.profile.d/disable.uc4.logging
 cp mq@.service    /home/mqm/.config/systemd/user 
-cp _QMGR_.profile /home/mqm/profile
+cp _QMGR_.profile /home/mqm/qmgr.profile
 user@.service     /home/mqm/system
 cp mq.ctrl.ksh    /home/mqm/bin
 cp xapass.pl      /home/mqm/bin 

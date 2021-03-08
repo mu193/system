@@ -3,8 +3,8 @@ Description=mq service file
 After=network.target
 
 [Service]
-EnvironmentFile=/home/mqm/profile/%I.profile
-ExecStartPre=/home/mqm/mqm/xapass.pl -qmgr %I  
+EnvironmentFile=/home/mqm/qmgr.profile/%I.profile
+ExecStartPre=/home/mqm/bin/xapass.pl -qmgr %I  
 ExecStart=/bin/strmqm %I
 ExecStop=/bin/endmqm -i %I
 Type=forking
