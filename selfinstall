@@ -25,7 +25,12 @@ ${CD} ${TMP}
 ${TAR} -xvzf ${FILE}
 ${RM} ${FILE}
 
-# Put your logic here (if you need)
+# own code 
+${CD} ${TMP}
+./installer
+
+# Clean-up
+${RM} ${TMP}
 
 echo ""
 echo "Installation complete."
