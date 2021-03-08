@@ -11,10 +11,11 @@
 touch /home/mqm/.profile.d/empty
 cp user.profile   /home/mqm/.profile 
 cp uc4.logging    /home/mqm/.profile.d/disable.uc4.logging
+cp editrc         /home/mqm/.editrc
 cp mq@.service    /home/mqm/.config/systemd/user 
 cp _QMGR_.profile /home/mqm/qmgr.profile
 cp user@.service  /home/mqm/system
 cp mq.ctrl.ksh    /home/mqm/bin
 cp xapass.pl      /home/mqm/bin 
-cp strmqm            /home/mqm/.bin 
-cp endmqm            /home/mqm/.bin 
+cp strmqm         /home/mqm/.bin 
+cp endmqm         /home/mqm/.bin 

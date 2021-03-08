@@ -1,7 +1,6 @@
-SRC = strmqm endmqm mq@.service user@.service  \
-      mq.ctrl.ksh  xapass.pl                   \
-      user.profile uc4.logging _QMGR_.profile  \
-      installer    
+SRC = strmqm endmqm mq@.service user@.service  editrc \
+      mq.ctrl.ksh  xapass.pl                          \
+      user.profile uc4.logging _QMGR_.profile  
 
 .INTERMEDIATE : arch.tar.gz 
 
@@ -11,5 +10,5 @@ mqinstaller : selfinstall arch.tar.gz
 	cat $^ > $@
 
 
-arch.tar.gz : $(SRC)
+arch.tar.gz : $(SRC) installer
 	tar czf $@ $^ 
