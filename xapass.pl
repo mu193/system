@@ -16,7 +16,6 @@
 #    environment_name and user are mandantory but they can be set either by 
 #    command line (-env , -user) or in -cfg file
 #
-# /opt/mqm/91a/bin/setmqxacred -m A31HUB11 -x AQAccess -u hub_app_user -p $p
 ################################################################################
 
 use strict ; 
@@ -78,6 +77,10 @@ while( defined $ARGV[0] )
 }
 
 &usage() unless defined $qmgr ;
+
+# $qmIni{XAResourceManager}{Name}
+my %qmIni = &readQmIni( $qmgr );
+exit 0 unless( exists $qmIni{XAResourceManager} );
 
 my( $cfgUser, $cfgEnv) = &getCfg($cfg) if defined $cfg ;
 $user = $cfgUser unless defined $user ;
@@ -225,7 +228,7 @@ sub setPasswd
 #
 ################################################################################
 
-my %qmIni = readQmIni $qmgr ;
+# my %qmIni = readQmIni $qmgr ;
 my $xaManager = $qmIni{XAResourceManager}{Name} ;
 my $passwd = getPasswd $user, $env ;
 setPasswd( $qmgr, $xaManager, $user, $passwd ) ;
