@@ -19,3 +19,4 @@ cp mq.ctrl.ksh    /home/mqm/bin
 cp xapass.pl      /home/mqm/bin 
 cp strmqm         /home/mqm/.bin 
 cp endmqm         /home/mqm/.bin 
+cp service.env    /var/mqm/

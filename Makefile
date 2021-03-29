@@ -1,6 +1,7 @@
 SRC = strmqm endmqm mq@.service user@.service  editrc \
       mq.ctrl.ksh  xapass.pl                          \
-      user.profile uc4.logging _QMGR_.profile  
+      user.profile uc4.logging _QMGR_.profile         \
+      service.env
 
 .INTERMEDIATE : arch.tar.gz 
 
