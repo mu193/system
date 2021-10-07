@@ -27,7 +27,7 @@ ${RM} ${FILE}
 
 # own code 
 ${CD} ${TMP}
-./installer
+./installer $1 $2
 
 # Clean-up
 ${RM} ${TMP}

@@ -1,22 +1,57 @@
 #!/bin/bash 
 
-[ -d /home/mqm/.bin         ] || mkdir /home/mqm/.bin
-[ -d /home/mqm/bin          ] || mkdir /home/mqm/bin
-[ -d /home/mqm/system       ] || mkdir /home/mqm/system
-[ -d /home/mqm/cfg          ] || mkdir /home/mqm/cfg 
-[ -d /home/mqm/qmgr.profile ] || mkdir /home/mqm/qmgr.profile
-[ -d /home/mqm/.profile.d   ] || mkdir /home/mqm/.profile.d 
-[ -d /home/mqm/.config/systemd/user ] || mkdir -p /home/mqm/.config/systemd/user 
+OPT=$1 
 
-touch /home/mqm/.profile.d/empty
-cp user.profile   /home/mqm/.profile 
-cp uc4.logging    /home/mqm/.profile.d/disable.uc4.logging
-cp editrc         /home/mqm/.editrc
-cp mq@.service    /home/mqm/.config/systemd/user 
-cp _QMGR_.profile /home/mqm/qmgr.profile
-cp user@.service  /home/mqm/system
-cp mq.ctrl.ksh    /home/mqm/bin
-cp xapass.pl      /home/mqm/bin 
-cp strmqm         /home/mqm/.bin 
-cp endmqm         /home/mqm/.bin 
+case $OPT in
+  "")
+    if [[ "$(id -un)" != "mqm" ]] 
+    then
+      echo "  executing with user \'$(id -un)\' user" 
+      echo "  use --restricted-user " 
+      exit  
+    fi
+  ;;
+  "--restricted-user")
+    USER=$(id -un)
+    if [[ "$USER" != "$2" ]] 
+    then
+      echo "  executing with user \'$(id -un)\' user" 
+      echo "  not with restricted user \'$2\' "
+      exit
+    fi
+     id -Gn $USER | tr " " "\n" | grep -q "^mqm$"
+     rc=$?
+     if [[ $rc -ne 0 ]]
+     then
+       echo "  restricted user must be member of mqm group"
+       exit ;
+     fi
+  ;;
+  "*")
+    echo "  unknwon attribte"
+    exit 
+  ;; 
+esac
+
+[ -d $HOME/.bin         ] || mkdir $HOME/.bin
+[ -d $HOME/bin          ] || mkdir $HOME/bin
+[ -d $HOME/system       ] || mkdir $HOME/system
+[ -d $HOME/cfg          ] || mkdir $HOME/cfg 
+[ -d $HOME/qmgr.profile ] || mkdir $HOME/qmgr.profile
+[ -d $HOME/.profile.d   ] || mkdir $HOME/.profile.d 
+[ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
+
+touch $HOME/.profile.d/empty
+cp user.profile   $HOME/.profile 
+cp uc4.logging    $HOME/.profile.d/disable.uc4.logging
+cp editrc         $HOME/.editrc
+cp mq@.service    $HOME/.config/systemd/user 
+cp _QMGR_.profile $HOME/qmgr.profile
+cp user@.service  $HOME/system
+cp mq.ctrl.ksh    $HOME/bin
+cp xapass.pl      $HOME/bin 
+cp strmqm         $HOME/.bin 
+cp endmqm         $HOME/.bin 
 cp service.env    /var/mqm/
+cp qm.ssl.ini     $HOME/cfg
+cp qm.fs.ini      $HOME/cfg
