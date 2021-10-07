@@ -22,12 +22,19 @@ TMP=$(${MKDIR} /tmp/selfextract.XXXXXX)
 ARCHIVE=$(${AWK} '/^__ARCHIVE__/ {print NR + 1; exit 0; }' "${0}")
 ${TAIL} -n+${ARCHIVE} "${0}"  > ${TMP}/${FILE}
 ${CD} ${TMP}
-${TAR} -xvzf ${FILE}
+${TAR} -xzf ${FILE}
 ${RM} ${FILE}
 
 # own code 
 ${CD} ${TMP}
-./installer $1 $2
+./installer $1 $2 
+rc=$?
+
+if [[ $rc -eq 1 ]] 
+then
+  echo " installation failed"
+  exit 1
+fi
 
 # Clean-up
 ${RM} ${TMP}

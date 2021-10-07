@@ -8,7 +8,7 @@ case $OPT in
     then
       echo "  executing with user \'$(id -un)\' user" 
       echo "  use --restricted-user " 
-      exit  
+      exit  1
     fi
   ;;
   "--restricted-user")
@@ -17,19 +17,19 @@ case $OPT in
     then
       echo "  executing with user \'$(id -un)\' user" 
       echo "  not with restricted user \'$2\' "
-      exit
+      exit 1
     fi
      id -Gn $USER | tr " " "\n" | grep -q "^mqm$"
      rc=$?
      if [[ $rc -ne 0 ]]
      then
        echo "  restricted user must be member of mqm group"
-       exit ;
+       exit 1
      fi
   ;;
   "*")
     echo "  unknwon attribte"
-    exit 
+    exit  1
   ;; 
 esac
 
@@ -55,3 +55,5 @@ cp endmqm         $HOME/.bin
 cp service.env    /var/mqm/
 cp qm.ssl.ini     $HOME/cfg
 cp qm.fs.ini      $HOME/cfg
+
+exit 0
