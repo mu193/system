@@ -46,10 +46,6 @@ cp user.profile   $HOME/.profile
 cp uc4.logging    $HOME/.profile.d/disable.uc4.logging
 cp editrc         $HOME/.editrc
 
-perl -e 'open IN, $ARGV[0]; while(<IN>) {s/\/mqm\//\/$ARGV[1]\//; print $_;}' mq@.service $(id -un) > $HOME/.config/systemd/user/mq@.service
-
-# cp mq@.service    $HOME/.config/systemd/user 
-
 cp _QMGR_.profile $HOME/qmgr.profile
 cp user@.service  $HOME/system
 cp mq.ctrl.ksh    $HOME/bin
@@ -60,5 +56,12 @@ cp service.env    /var/mqm/
 cp qm.ssl.ini     $HOME/cfg
 cp qm.fs.ini      $HOME/cfg
 cp qm.chl.ini     $HOME/cfg
+
+# ----------------------------------------------------------
+# cp mq@.service $HOME/.config/systemd/user is not ok
+# adjust mqm to real user with pearl
+# ----------------------------------------------------------
+perl -e 'open IN, $ARGV[0]; while(<IN>) {s/\/mqm\//\/$ARGV[1]\//; print $_;}' mq@.service $(id -un) > $HOME/.config/systemd/user/mq@.service
+systemctl --user daemon-reload
 
 exit 0
