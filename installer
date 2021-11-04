@@ -33,12 +33,14 @@ case $OPT in
   ;; 
 esac
 
-[ -d $HOME/.bin         ] || mkdir $HOME/.bin
-[ -d $HOME/bin          ] || mkdir $HOME/bin
-[ -d $HOME/system       ] || mkdir $HOME/system
-[ -d $HOME/cfg          ] || mkdir $HOME/cfg 
-[ -d $HOME/qmgr.profile ] || mkdir $HOME/qmgr.profile
-[ -d $HOME/.profile.d   ] || mkdir $HOME/.profile.d 
+[ -d $HOME/.bin          ] || mkdir $HOME/.bin
+[ -d $HOME/bin           ] || mkdir $HOME/bin
+[ -d $HOME/system        ] || mkdir $HOME/system
+[ -d $HOME/cfg           ] || mkdir $HOME/cfg 
+[ -d $HOME/dlq.rules     ] || mkdir $HOME/dlq.rules
+[ -d /home/mqm/dlq.rules ] || mkdir /home/mqm/dlq.rules    
+[ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
+[ -d $HOME/.profile.d    ] || mkdir $HOME/.profile.d 
 [ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
 
 touch $HOME/.profile.d/empty
@@ -56,6 +58,7 @@ cp service.env    /var/mqm/
 cp qm.ssl.ini     $HOME/cfg
 cp qm.fs.ini      $HOME/cfg
 cp qm.chl.ini     $HOME/cfg
+cp dlh.ksh        /home/mqm/bin
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok
