@@ -37,6 +37,7 @@ esac
 [ -d $HOME/bin           ] || mkdir $HOME/bin
 [ -d $HOME/system        ] || mkdir $HOME/system
 [ -d $HOME/cfg           ] || mkdir $HOME/cfg 
+[ -d $HOME/etc           ] || mkdir $HOME/etc 
 [ -d $HOME/dlq.rules     ] || mkdir $HOME/dlq.rules
 [ -d /home/mqm/dlq.rules ] || mkdir /home/mqm/dlq.rules    
 [ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
@@ -58,7 +59,9 @@ cp service.env    /var/mqm/
 cp qm.ssl.ini     $HOME/cfg
 cp qm.fs.ini      $HOME/cfg
 cp qm.chl.ini     $HOME/cfg
+cp cert.tar       $HOME/cfg
 cp dlh.ksh        /home/mqm/bin
+cp version        $HOME/etc/mqcfg.version
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok
