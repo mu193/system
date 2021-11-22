@@ -1,6 +1,14 @@
 #!/usr/bin/ksh
 
 #-------------------------------
+# usage
+#-------------------------------
+if [ $# -ne 1 ]; then
+  echo "Usage: `basename $0` {Qmgr}"
+  exit 0
+fi
+
+#-------------------------------
 # variables
 #-------------------------------
 QMGR=$1
@@ -16,7 +24,7 @@ CHGRP="/usr/bin/chgrp"
 ${DSPMQ} -m ${QMGR} >/dev/null 2>&1
 QMGRSTATE=$?
  if [ ${QMGRSTATE} -ne 0 ]; then
-  echo "${QMGR} not exist"
+  echo "${QMGR} does not exist"
   exit 1
  fi
 
