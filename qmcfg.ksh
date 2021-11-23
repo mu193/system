@@ -31,12 +31,14 @@ QMGRSTATE=$?
 #-------------------------------
 # copy ini files
 #-------------------------------
- if [ -d /mq/data/${QMGR}/qm.ini.d ]; then
-  cp $HOME/cfg/qm.**.ini /mq/data/${QMGR}/qm.ini.d
- else
-  echo "directory /mq/data/${QMGR}/qm.ini.d doesn't exist"
-  exit 1
- fi
+[ -d /mq/data/${QMGR}/qm.ini.d ] || mkdir /mq/data/${QMGR}/qm.ini.d
+cp ${HOME}/cfg/qm.**.ini /mq/data/${QMGR}/qm.ini.d
+
+#-------------------------------
+# create {QMGR}.profile
+#-------------------------------
+[ -f ${HOME}/qmgr.profile/${QMGR}.profile ] || \
+cp ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/{QMGR}.profile
 
 #-------------------------------
 # rights
