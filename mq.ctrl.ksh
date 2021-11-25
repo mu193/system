@@ -66,32 +66,45 @@ case ${CMD} in
   # stop queue manager
   # --------------------------------------------------------
   "-stop")
-    if [[ -f "${HARES}" ]] 
+    if [[ -f "${HARES}" ]]
     then
-      sudo ${VCSMQ} ${QMGR} -offline  
+      sudo ${VCSMQ} ${QMGR} -offline
     else
-      ${SYSCTL} --user stop mq@${QMGR}.service 
+      ${SYSCTL} --user stop mq@${QMGR}.service
     fi ;;
+
+  # --------------------------------------------------------
+  # force stop queue manager
+  # --------------------------------------------------------
+  "-fstop")
+      ${ENDMQM} -i ${QMGR}
+       ;;
 
   # --------------------------------------------------------
   # start queue manager
   # --------------------------------------------------------
   "-start")
-    if [[ -f "${HARES}" ]] 
+    if [[ -f "${HARES}" ]]
     then
-      ${XAPASS} -qmgr ${QMGR} -cfg /mq/data/${QMGR}/vcs.env 
-      sudo ${VCSMQ} ${QMGR} -online 
+      ${XAPASS} -qmgr ${QMGR} -cfg /mq/data/${QMGR}/vcs.env
+      sudo ${VCSMQ} ${QMGR} -online
     else
-      ${SYSCTL} --user start mq@${QMGR}.service 
+      ${SYSCTL} --user start mq@${QMGR}.service
     fi ;;
+
+  # --------------------------------------------------------
+  # force start queue manager
+  # --------------------------------------------------------
+  "-fstart")
+      ${STRMQM} ${QMGR}
+       ;;
 
   # --------------------------------------------------------
   # wrong call
   # --------------------------------------------------------
   *)
-    echo "$0 [-start | -stop] $QMGR"
+    echo "$0 [-start | -stop | -fstart | -fstop] $QMGR"
     exit 1 ;
 
 esac;
-
 
