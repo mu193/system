@@ -62,6 +62,7 @@ cp qm.chl.ini     $HOME/cfg
 cp cert.tar       $HOME/cfg
 cp dlh.ksh        /home/mqm/bin
 cp version        $HOME/etc/mqcfg.version
+cp qmcfg.ksh      $HOME/bin
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok
