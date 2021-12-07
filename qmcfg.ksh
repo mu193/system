@@ -38,7 +38,7 @@ cp ${HOME}/cfg/qm.**.ini /mq/data/${QMGR}/qm.ini.d
 # create {QMGR}.profile
 #-------------------------------
 [ -f ${HOME}/qmgr.profile/${QMGR}.profile ] || \
-cp ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/{QMGR}.profile
+cp ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/${QMGR}.profile
 
 #-------------------------------
 # rights
