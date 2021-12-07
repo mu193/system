@@ -38,7 +38,7 @@ esac
 [ -d $HOME/system        ] || mkdir $HOME/system
 [ -d $HOME/cfg           ] || mkdir $HOME/cfg 
 [ -d $HOME/etc           ] || mkdir $HOME/etc 
-[ -d $HOME/dlq.rules     ] || mkdir $HOME/dlq.rules
+[ -d $HOME/dlq.rules     ] || mkdir $HOME/dlq.rules >> /dev/null
 [ -d /home/mqm/dlq.rules ] || mkdir /home/mqm/dlq.rules    
 [ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
 [ -d $HOME/.profile.d    ] || mkdir $HOME/.profile.d 
@@ -61,7 +61,7 @@ cp qm.ssl.ini       $HOME/cfg
 cp qm.fs.ini        $HOME/cfg
 cp qm.chl.ini       $HOME/cfg
 cp cert.tar         $HOME/cfg
-cp dlh.ksh          /home/mqm/bin
+cp dlh.ksh          /home/mqm/bin >> /dev/null
 cp version          $HOME/etc/mqcfg.version
 cp qmcfg.ksh        $HOME/bin
 
