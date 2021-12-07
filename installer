@@ -49,20 +49,21 @@ cp user.profile   $HOME/.profile
 cp uc4.logging    $HOME/.profile.d/disable.uc4.logging
 cp editrc         $HOME/.editrc
 
-cp _QMGR_.profile $HOME/qmgr.profile
-cp user@.service  $HOME/system
-cp mq.ctrl.ksh    $HOME/bin
-cp xapass.pl      $HOME/bin 
-cp strmqm         $HOME/.bin 
-cp endmqm         $HOME/.bin 
-cp service.env    /var/mqm/
-cp qm.ssl.ini     $HOME/cfg
-cp qm.fs.ini      $HOME/cfg
-cp qm.chl.ini     $HOME/cfg
-cp cert.tar       $HOME/cfg
-cp dlh.ksh        /home/mqm/bin
-cp version        $HOME/etc/mqcfg.version
-cp qmcfg.ksh      $HOME/bin
+cp _QMGR_.profile   $HOME/qmgr.profile
+cp user@.service    $HOME/system
+cp mq.ctrl.ksh      $HOME/bin
+cp xapass.pl        $HOME/bin 
+cp strmqm           $HOME/.bin 
+cp endmqm           $HOME/.bin 
+cp mq.serv.exec.ksh $HOME/.bin 
+cp service.env      /var/mqm/
+cp qm.ssl.ini       $HOME/cfg
+cp qm.fs.ini        $HOME/cfg
+cp qm.chl.ini       $HOME/cfg
+cp cert.tar         $HOME/cfg
+cp dlh.ksh          /home/mqm/bin
+cp version          $HOME/etc/mqcfg.version
+cp qmcfg.ksh        $HOME/bin
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok
