@@ -45,6 +45,7 @@ cp ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/${QMGR}.profile
 #-------------------------------
 ${CHGRP} mqmon /var/mqm/errors
 ${CHGRP} mqmon /mq/data/${QMGR}/errors
+${CHGRP} mqmon /mq/data/${QMGR}/errors/AMQERR*
 ${CHMOD} 6770 /mq/data/${QMGR}/errors
 ${CHMOD} 640 /mq/data/${QMGR}/errors/*
 
