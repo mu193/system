@@ -13,10 +13,11 @@ fi
 #-------------------------------
 QMGR=$1
 USERMQM=mqm
-HOME="$(eval echo ~${USERMQM})"
+# HOME="$(eval echo ~${USERMQM})"
 DSPMQ="/usr/bin/dspmq"
 CHMOD="/usr/bin/chmod"
 CHGRP="/usr/bin/chgrp"
+CP="/usr/bin/cp"
 
 #-------------------------------
 # check if queue manager exist
@@ -29,16 +30,19 @@ QMGRSTATE=$?
  fi
 
 #-------------------------------
-# copy ini files
+# copy qm.ini files
 #-------------------------------
 [ -d /mq/data/${QMGR}/qm.ini.d ] || mkdir /mq/data/${QMGR}/qm.ini.d
-cp ${HOME}/cfg/qm.**.ini /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.chl.ini     /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.errlog.ini  /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.fs.ini      /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.ssl.ini     /mq/data/${QMGR}/qm.ini.d
 
 #-------------------------------
 # create {QMGR}.profile
 #-------------------------------
 [ -f ${HOME}/qmgr.profile/${QMGR}.profile ] || \
-cp ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/${QMGR}.profile
+${CP} ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/${QMGR}.profile
 
 #-------------------------------
 # rights
