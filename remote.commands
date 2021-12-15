@@ -1,0 +1,33 @@
+<command>
+  <exec>
+    ps
+    df
+    ls
+  </exec>
+</command>
+
+<command>
+  <exec>
+    dspmq
+    dspmqver
+  </exec>
+</command>
+
+<command>
+  <exec>
+    runmqakm
+  </exec>
+  <arg>
+    -cert\s+-list
+    -cert\s+-details
+  </arg>
+</command>
+
+<command>
+  <exec>
+    systemctl 
+  </exec>
+  <arg>
+    --user\s+status 
+  </arg>
+</command>

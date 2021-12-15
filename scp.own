@@ -1,0 +1,100 @@
+#!/bin/perl 
+
+use strict ;
+
+# ------------------------------------------------------------------------------
+# SSH Internal
+# ------------------------------------------------------------------------------
+my $orgCmd = "$ENV{'SSH_ORIGINAL_COMMAND'}" ;
+
+
+my @arg =  split /\s+/, $orgCmd ;
+while( $arg[0] =~ /=/ )  
+{
+  shift @arg ;
+}
+
+my $gCmd = $arg[0] ;
+shift @arg ;
+
+my $gDirection ;
+my $gRecrusive = 0 ;
+
+while( $arg[0] =~ /^-(.+)/ )
+{
+  my $flag = $1 ;
+  shift @arg ;
+
+  if( $flag eq 'f' )
+  {
+    $gDirection = 'pull' ;
+    next ;
+  }
+  if( $flag eq 't' ) 
+  {
+    $gDirection = 'push' ;
+    next ;
+  }
+  if( $flag eq 'r' ) 
+  {
+    $gRecrusive = 1 ; 
+    next ;
+  }
+  die "flag >$flag< not allowed: $orgCmd" ;
+}
+
+my $gFile = $arg[0] ;
+shift @arg ;
+
+# ------------------------------------------------------------------------------
+# Real Stuff
+# ------------------------------------------------------------------------------
+my $allow = $ENV{HOME}."/.ssh/remote.transfer" ;
+die "SSH: allow file not found\n" unless open ALLOW, $allow ;
+
+my $exec = 0 ;
+
+my %flag ;
+while (my $line = <ALLOW>)
+{
+  chomp $line;
+  next if $line =~ /^\s*#/ ;
+  next if $line =~ /^\s*$/ ;
+
+  my ($file,$direction,@flag) = split /\s+/, $line ;
+  next unless $gFile =~ /$file/ ;
+  next unless $direction eq $gDirection ;
+
+  $exec = 1 ;
+ 
+  foreach my $flag ( @flag )
+  {
+    $flag =~ /^(\w+)=(.+)$/ ;
+    my $key = $1 ;
+    my $val = $2 ;
+    $flag{$key} = $val ;
+  }
+  last ; 
+}
+
+die "not allowed to $gDirection $gFile" if $exec == 0 ;
+
+if( exists $flag{overwrite}  &&
+    $flag{overwrite} eq 'no' )
+{
+  delete $flag{overwrite} ;
+  if( $gDirection eq 'push' )
+  {
+    die "$gFile already exists" if -e $gFile ;
+  }
+}
+
+system "$orgCmd" ;
+
+foreach my $flag (keys %flag)
+{
+  if( $flag eq 'right' )
+  {
+    chmod $flag, $flag{right} ;
+  }
+}

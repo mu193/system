@@ -1,0 +1,7 @@
+/mq/data/\w+/errors/AMQERR\d\d\.LOG  pull 
+/mq/data/\w+/errors/AMQERR\*\.LOG    pull 
+/mq/data/\w+/errors/AMQERR\d\d\.json pull 
+/mq/data/\w+/errors/AMQERR\*\.json   pull 
+/mq/data/\w+/qm.ini                  pull
+/var/mqm/mqs.ini                     pull
+/home/mqm/transfer/                  push right=600 

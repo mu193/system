@@ -65,6 +65,10 @@ cp cert.tar         $HOME/cfg
 cp dlh.ksh          /home/mqm/bin >> /dev/null
 cp version          $HOME/etc/mqcfg.version
 cp qmcfg.ksh        $HOME/bin
+cp scp.own          $HOME/.ssh/scp.own          
+cp sscmd.own        $HOME/.ssh/sscmd.own        
+cp remote.commands  $HOME/.ssh/remote.commands  
+cp remote.transfer  $HOME/.ssh/remote.transfer  
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok

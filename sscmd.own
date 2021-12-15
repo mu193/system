@@ -1,0 +1,212 @@
+#!/bin/perl 
+
+use strict ;
+
+# ------------------------------------------------------------------------------
+# SSH Internal
+# ------------------------------------------------------------------------------
+my $orgCmd = "$ENV{'SSH_ORIGINAL_COMMAND'}" ;
+
+my @arg =  split /\s+/, $orgCmd ;
+while( $arg[0] =~ /=/ )  
+{
+  shift @arg ;
+}
+
+my $cmd = $arg[0] ; 
+  shift @arg ;
+
+
+# ------------------------------------------------------------------------------
+# debug
+# ------------------------------------------------------------------------------
+#print "$cmd\n";
+#foreach (@arg)
+#{
+#  print "$_\n" ;
+#}
+
+# ------------------------------------------------------------------------------
+#
+# Functions
+#
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# read config 
+# ------------------------------------------------------------------------------
+sub readConfig
+{
+  my $cfg = $_[0] ;
+  my $_rules ;
+
+  die "SSH: allow file not found\n" unless open CFG, $cfg ;
+
+  my $tag = 0;
+  my $cmdTag = 0 ;
+  my $execTag = 0 ;
+  my $argTag = 0 ;
+  my $id = 0;
+
+  foreach my $line (<CFG>)
+  {
+    chomp $line;
+    next if $line =~ /^\s*#/ ;
+    next if $line =~ /^\s*$/ ;
+
+    if( $line =~ /^\s*<command>\s*$/ )
+    {
+      $tag++; 
+      $cmdTag++;
+      next ;
+    }
+
+    if( $line =~ /^\s*<\/command>\s*$/ )
+    {
+      $tag--; 
+      $cmdTag--; 
+      $id++;
+      next ;
+    }
+
+    if( $line =~ /^\s*<exec>\s*$/ )
+    {
+      $tag++ ;
+      $execTag++; 
+      next ;
+    }
+
+    if( $line =~ /^\s*<\/exec>\s*$/ )
+    {
+      $tag--;
+      $execTag--; 
+      next ;
+    }
+
+    if( $line =~ /^\s*<arg>\s*$/ )
+    {
+      $tag++ ;
+      $argTag++; 
+      next ;
+    }
+
+    if( $line =~ /^\s*<\/arg>\s*$/ )
+    {
+      $tag-- ;
+      $argTag--; 
+      next ;
+    }
+
+    if( $tag < 0 ||
+        $tag > 2 ||
+        $execTag < 0 ||
+        $execTag > 1 ||
+        $argTag  < 0 ||
+        $argTag  > 1 )
+    {
+      die "syntax err: $cfg" ;
+    }
+
+    $line =~ s/\s//g;
+
+    if( $execTag == 1 )
+    {
+      push @{$_rules->{$id}{CMD}}, $line ;
+      next ;
+    }
+
+    if( $argTag == 1 )
+    {
+      push @{$_rules->{$id}{ARG}}, $line ;
+      next ;
+    }
+  }
+  return $_rules ;
+}
+
+# ------------------------------------------------------------------------------
+# check command
+# ------------------------------------------------------------------------------
+sub checkCommand 
+{
+  my $_rules = $_[0] ;
+  my $cmd    = $_[1] ; shift ; shift ;
+  my @arg    = @_    ;
+
+  my $match ;
+  foreach my $id ( sort keys %{$_rules} )
+  {
+    foreach my $exec (@{$_rules->{$id}{CMD}})
+    {
+      $match = 0;
+      if( $cmd =~ /$exec/ )
+      {
+        $match++ ;
+        last ;
+      }
+    }
+
+    next if $match == 0 ;
+
+    if( $match == 1)
+    {
+      unless( exists $_rules->{$id}{ARG} )
+      {
+        $match++;
+      }
+      else
+      {
+        my $arg = "@arg" ;
+        foreach my $rule (@{$_rules->{$id}{ARG}}) 
+        { 
+          if( $arg =~ /$rule/ )
+          {
+            $match++;
+            last ;
+          }
+        }
+        $match = -1 unless $match == 2 ;
+      }
+    }
+    last unless $match == 0;
+  }
+  return $match ;
+}
+
+# ------------------------------------------------------------------------------
+# Real Stuff
+# ------------------------------------------------------------------------------
+my $allow = $ENV{HOME}."/.ssh/remote.commands" ;
+
+my $_rules = &readConfig( $allow );
+
+# foreach my $id (sort keys %{$_rules})
+# {
+#   foreach my $exec (@{$_rules->{$id}{CMD}})
+#   {
+#     print "$id\t$exec\n";
+#     foreach my $arg (@{$_rules->{$id}{ARG}})
+#     {
+#       print "\t\t$arg\n";
+#     }
+#   }
+# }
+
+# print "$cmd\n" ;
+# foreach my $arg (@arg)
+# {
+#   print "\t$arg\n" ;
+# }
+
+my $rc = checkCommand $_rules, $cmd, @arg ;
+
+unless( $rc == 2 ) 
+{
+  die "not allowed to execute\n" ;
+}
+
+foreach my $line (`$orgCmd`)
+{
+  print "$line" ;
+}
+
