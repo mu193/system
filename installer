@@ -34,15 +34,25 @@ case $OPT in
 esac
 
 [ -d $HOME/.bin          ] || mkdir $HOME/.bin
+[ -d $HOME/.ssh          ] || { mkdir $HOME/.ssh; chmod 700 $HOME/.ssh; }
 [ -d $HOME/bin           ] || mkdir $HOME/bin
 [ -d $HOME/system        ] || mkdir $HOME/system
 [ -d $HOME/cfg           ] || mkdir $HOME/cfg 
 [ -d $HOME/etc           ] || mkdir $HOME/etc 
-[ -d $HOME/dlq.rules     ] || mkdir $HOME/dlq.rules >> /dev/null
-[ -d /home/mqm/dlq.rules ] || mkdir /home/mqm/dlq.rules    
 [ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
 [ -d $HOME/.profile.d    ] || mkdir $HOME/.profile.d 
 [ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
+
+[ "$(id -un)" == "mqm"   ]   &&    \
+{                                  \
+  [ -d /home/mqm/dlq.rules ] ||    \
+  {                                \
+    mkdir /home/mqm/dlq.rules ;    \
+    chmod 775 /home/mqm/dlq.rules; \
+  }                              ; \
+  cp dlh.ksh /home/mqm/bin       ; \
+}
+
 
 touch $HOME/.profile.d/empty
 cp user.profile   $HOME/.profile 
@@ -57,18 +67,17 @@ cp strmqm           $HOME/.bin
 cp endmqm           $HOME/.bin 
 cp mq.serv.exec.ksh $HOME/.bin 
 cp service.env      /var/mqm/
-cp qm.ssl.ini       $HOME/cfg
-cp qm.fs.ini        $HOME/cfg
-cp qm.chl.ini       $HOME/cfg
-cp qm.errlog.ini    $HOME/cfg
+cp global.qm.ssl.ini    $HOME/cfg
+cp global.qm.fs.ini     $HOME/cfg
+cp global.qm.chl.ini    $HOME/cfg
+cp global.qm.errlog.ini $HOME/cfg
 cp cert.tar         $HOME/cfg
-cp dlh.ksh          /home/mqm/bin >> /dev/null
 cp version          $HOME/etc/mqcfg.version
 cp qmcfg.ksh        $HOME/bin
-cp scp.own          $HOME/.ssh/scp.own          
-cp sscmd.own        $HOME/.ssh/sscmd.own        
-cp remote.commands  $HOME/.ssh/remote.commands  
-cp remote.transfer  $HOME/.ssh/remote.transfer  
+cp scp.own          $HOME/.ssh/scp.own         ; chmod 700 $HOME/.ssh/scp.own          
+cp sscmd.own        $HOME/.ssh/sscmd.own       ; chmod 700 $HOME/.ssh/sscmd.own        
+cp remote.commands  $HOME/.ssh/remote.commands ; chmod 600 $HOME/.ssh/remote.commands  
+cp remote.transfer  $HOME/.ssh/remote.transfer ; chmod 600 $HOME/.ssh/remote.transfer  
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok

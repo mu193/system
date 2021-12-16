@@ -11,6 +11,7 @@ all : mqinstaller
 
 mqinstaller : selfinstall arch.tar.gz
 	cat $^ > $@
+	chmod 755 $@
 
 arch.tar.gz : $(SRC) installer cert.tar
 	date "+mqinstaller %Y-%m-%d" > version
