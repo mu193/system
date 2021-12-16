@@ -47,11 +47,17 @@ ${CP} ${HOME}/qmgr.profile/_QMGR_.profile ${HOME}/qmgr.profile/${QMGR}.profile
 #-------------------------------
 # rights
 #-------------------------------
-${CHGRP} mqmon /var/mqm/errors
-${CHGRP} mqmon /mq/data/${QMGR}/errors
-${CHGRP} mqmon /mq/data/${QMGR}/errors/AMQERR*
-${CHMOD} 6770 /mq/data/${QMGR}/errors
-${CHMOD} 640 /mq/data/${QMGR}/errors/*
+if [[ "$(id -un)" == "mqm" ]]
+then
+  ${CHGRP} mqmon /var/mqm/errors
+  ${CHGRP} mqmon /mq/data/${QMGR}/errors
+  ${CHGRP} mqmon /mq/data/${QMGR}/errors/AMQERR*
+  ${CHMOD} 6770 /mq/data/${QMGR}/errors
+  ${CHMOD} 640 /mq/data/${QMGR}/errors/*
+else
+  echo "${CHMOD} only on AMQERR possible only with user mqm"
+  echo "all other tasks -> OK" 
+fi
 
 exit 0
 
