@@ -6,6 +6,9 @@ use strict ;
 # SSH Internal
 # ------------------------------------------------------------------------------
 my $orgCmd = "$ENV{'SSH_ORIGINAL_COMMAND'}" ;
+my $home=$ENV{'HOME'};
+my $path=$ENV{'PATH'};
+$ENV{'PATH'}="$home/transfer:$path" ;
 
 my @arg =  split /\s+/, $orgCmd ;
 while( $arg[0] =~ /=/ )  

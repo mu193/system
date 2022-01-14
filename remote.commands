@@ -31,3 +31,22 @@
     --user\s+status 
   </arg>
 </command>
+
+<command>
+  <exec>
+    uname 
+  </exec>
+  <arg>
+    -n
+  </arg>
+</command>
+
+<command>
+  <exec>
+    keysetter 
+  </exec>
+  <arg>
+    add
+    overwrite
+  </arg>
+</command>

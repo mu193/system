@@ -5,3 +5,5 @@
 /mq/data/\w+/qm.ini                  pull
 /var/mqm/mqs.ini                     pull
 /home/mqm/transfer/                  push right=600 
+~/transfer/                          push right=600 
+~/transfer/keysetter                 push right=700 
