@@ -79,15 +79,17 @@ while( defined $ARGV[0] )
 &usage() unless defined $qmgr ;
 
 # $qmIni{XAResourceManager}{Name}
-my %qmIni = &readQmIni( $qmgr );
+
+my $ini = "/mq/data/$qmgr/qm.ini" ;
+my %qmIni = &readQmIni( $ini );
 exit 0 unless( exists $qmIni{XAResourceManager} );
 
 my( $cfgUser, $cfgEnv) = &getCfg($cfg) if defined $cfg ;
 $user = $cfgUser unless defined $user ;
 $env  = $cfgEnv  unless defined $env  ;
 
-$user = $ENV{USERNAME} if exists $ENV{USERNAME} ;
-$env  = $ENV{ENVNAME}  if exists $ENV{ENVNAME} ;
+$user = $ENV{XA_USER_NAME} if exists $ENV{XA_USER_NAME} ;
+$env  = $ENV{XA_ENV_NAME}  if exists $ENV{XA_ENV_NAME} ;
 
 &usage() unless defined $user ;
 &usage() unless defined $env  ;
@@ -130,8 +132,8 @@ sub getCfg
     my $key = $1;
     my $val = $2;
 
-    $user = $val if $key eq 'USERNAME' ;
-    $env  = $val if $key eq 'ENVNAME' ;
+    $user = $val if $key eq 'XA_USER_NAME' ;
+    $env  = $val if $key eq 'XA_ENV_NAME' ;
   }
 
   return ($user, $env);
@@ -161,9 +163,8 @@ sub getPasswd
 # ------------------------------------------------------------------------------
 sub readQmIni
 {
-  my $qmgr = $_[0] ;
+  my $ini = $_[0] ;
 
-  my $ini = "/mq/data/$qmgr/qm.ini" ;
 
   die "can't open $ini" unless open INI, "$ini" ;
 
@@ -185,7 +186,25 @@ sub readQmIni
     $line =~ /^\s*(\w+)\s*=\s*(\S+)\s*$/ ;
     my $key = $1 ;
     my $val = $2 ;
-  
+ 
+    if( $stanza eq 'AutoConfig' &&
+        $key    eq 'IniConfig'   )
+    {
+      if( -d $val )
+      {
+        foreach my $file ( glob "$val/*" ) 
+        {
+          my %subIni = &readQmIni($file);
+          %qmini = (%qmini, %subIni);
+        }
+      }
+      else
+      {
+        my %subIni = &readQmIni($val);
+        %qmini = (%qmini, %subIni);
+      }
+    }
+ 
     $qmini{$stanza}{$key} = $val ;
   }
   close INI ;
@@ -228,7 +247,6 @@ sub setPasswd
 #
 ################################################################################
 
-# my %qmIni = readQmIni $qmgr ;
 my $xaManager = $qmIni{XAResourceManager}{Name} ;
 my $passwd = getPasswd $user, $env ;
 setPasswd( $qmgr, $xaManager, $user, $passwd ) ;
