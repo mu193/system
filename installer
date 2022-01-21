@@ -39,6 +39,7 @@ esac
 [ -d $HOME/system        ] || mkdir $HOME/system
 [ -d $HOME/cfg           ] || mkdir $HOME/cfg 
 [ -d $HOME/etc           ] || mkdir $HOME/etc 
+[ -d $HOME/transfer      ] || mkdir $HOME/transfer 
 [ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
 [ -d $HOME/.profile.d    ] || mkdir $HOME/.profile.d 
 [ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
