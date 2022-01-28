@@ -3,13 +3,24 @@
     ps
     df
     ls
+    getent
   </exec>
+</command>
+
+<command>
+  <exec>
+    uname 
+  </exec>
+  <arg>
+    -n
+  </arg>
 </command>
 
 <command>
   <exec>
     dspmq
     dspmqver
+    ffstsummary
   </exec>
 </command>
 
@@ -34,11 +45,8 @@
 
 <command>
   <exec>
-    uname 
+    journalctl
   </exec>
-  <arg>
-    -n
-  </arg>
 </command>
 
 <command>
@@ -50,3 +58,4 @@
     overwrite
   </arg>
 </command>
+
