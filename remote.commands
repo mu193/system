@@ -40,6 +40,7 @@
   </exec>
   <arg>
     --user\s+status 
+    --user\s+is-active
   </arg>
 </command>
 
