@@ -4,6 +4,7 @@
     df
     ls
     getent
+    id
   </exec>
 </command>
 
@@ -13,6 +14,15 @@
   </exec>
   <arg>
     -n
+  </arg>
+</command>
+
+<command>
+  <exec>
+    crontab 
+  </exec>
+  <arg>
+    -l
   </arg>
 </command>
 
