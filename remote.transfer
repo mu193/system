@@ -4,8 +4,11 @@
 /mq/data/\w+/errors/AMQERR\*\.json   pull 
 /mq/data/\w+/qm.ini                  pull
 /var/mqm/mqs.ini                     pull
+/var/mqm/errors/AMQ.+                pull
 /home/mqm/transfer/.+                pull 
 /home/mqm/transfer/                  push right=600 
 ~/transfer/.+                        pull 
 ~/transfer/                          push right=600 
 ~/transfer/keysetter                 push right=700 
+/tmp/.+                              pull 
+/tmp/                                push right=644

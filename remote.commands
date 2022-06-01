@@ -5,6 +5,7 @@
     ls
     getent
     id
+    du
   </exec>
 </command>
 
