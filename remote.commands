@@ -6,6 +6,7 @@
     getent
     id
     du
+    last
   </exec>
 </command>
 
