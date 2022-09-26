@@ -17,7 +17,7 @@ TAR=tar
 FILE=arch
 
 # Create destination folder
-TMP=$(${MKDIR} /tmp/selfextract.${PRJ})
+TMP=$(${MKDIR} /tmp/selfextract.XXXXXX)
 
 
 # Find __ARCHIVE__ maker, read archive content and decompress it
