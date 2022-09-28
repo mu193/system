@@ -29,7 +29,7 @@ ${RM} ${FILE}
 
 # own code 
 ${CD} ${TMP}
-./installer $1 $2 
+./installer $@
 rc=$?
 
 if [[ $rc -eq 1 ]] 
