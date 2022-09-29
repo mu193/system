@@ -4,7 +4,6 @@ PRJ=MQINSTALLER
 
 echo ""
 echo "${PRJ} serfextract installer"
-echo ""
 
 # Commands
 AWK=awk
@@ -41,7 +40,6 @@ fi
 # Clean-up
 ${RM} ${TMP}
 
-echo ""
 echo "${PRJ}  installer complete"
 echo ""
 
