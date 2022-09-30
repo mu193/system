@@ -43,6 +43,7 @@ esac
 [ -d $HOME/qmgr.profile  ] || mkdir $HOME/qmgr.profile
 [ -d $HOME/.profile.d    ] || mkdir $HOME/.profile.d 
 [ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
+[ -d /var/mqm/xa_traces  ] || mkdir /var/mqm/xa_traces  
 
 [ "$(id -un)" == "mqm"   ]   &&    \
 {                                  \
