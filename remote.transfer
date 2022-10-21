@@ -12,3 +12,5 @@
 ~/transfer/keysetter                 push right=700 
 /tmp/.+                              pull 
 /tmp/                                push right=644
+/etc/[^\/]+                          pull
+~/etc/.+                             pull

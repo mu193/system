@@ -15,7 +15,7 @@ QMGR=$2
 # ------------------------------------------------------------------------------
 DSPMQ="/usr/bin/dspmq"
 INSPQMGR=$(${DSPMQ} -m ${QMGR} -o installation | \
-                tr "()" " " | awk '{ print $6 }')
+            tr " " "\n" | tr "()" " " | awk '$1~/INSTPATH/ {print $2}')
 STRMQM="${INSPQMGR}/bin/strmqm"
 ENDMQM="${INSPQMGR}/bin/endmqm"
 

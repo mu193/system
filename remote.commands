@@ -72,3 +72,16 @@
   </arg>
 </command>
 
+
+<command>
+  <exec>
+    cat
+    awk
+    grep
+    egrep
+  </exec>
+  <arg>
+    \/etc\/[^\/]+
+    ~/etc/.+
+  </arg>
+</command>
