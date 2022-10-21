@@ -7,7 +7,6 @@ EnvironmentFile=/home/mqm/qmgr.profile/%I.profile
 ExecStartPre=/home/mqm/bin/xapass.pl -qmgr %I  
 ExecStart=-/home/mqm/.bin/mq.serv.exec.ksh -start %I
 ExecStop=-/home/mqm/.bin/mq.serv.exec.ksh -stop %I
-SuccessExitStatus=0 5
 Type=forking
 #User=mqm
 #Group=mqm
