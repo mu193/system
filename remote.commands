@@ -1,12 +1,14 @@
 <command>
   <exec>
-    ps
     df
-    ls
     getent
-    id
     du
+    id
     last
+    ls
+    ps
+    uptime
+    who
   </exec>
 </command>
 
@@ -30,9 +32,9 @@
 
 <command>
   <exec>
+    ffstsummary
     dspmq
     dspmqver
-    ffstsummary
   </exec>
 </command>
 
@@ -72,13 +74,13 @@
   </arg>
 </command>
 
-
 <command>
   <exec>
-    cat
     awk
-    grep
+    cat
     egrep
+    grep
+    less
   </exec>
   <arg>
     \/etc\/[^\/]+
