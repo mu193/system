@@ -1,6 +1,6 @@
 SRC = strmqm endmqm mq@.service user@.service  editrc           \
       mq.ctrl.ksh  xapass.pl dlh.ksh qmcfg.ksh mq.serv.exec.ksh \
-      user.profile uc4.logging _QMGR_.profile service.env       \
+      user.profile _QMGR_.profile service.env       \
       scp.own  sscmd.own remote.commands  remote.transfer       \
       global.qm.fs.ini global.qm.ssl.ini global.qm.chl.ini global.qm.errlog.ini      
       

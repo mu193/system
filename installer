@@ -55,10 +55,12 @@ esac
   cp dlh.ksh /home/mqm/bin       ; \
 }
 
+# cleanup for version after 2022-11-11
+[ -f $HOME/.profile.d/disable.uc4.loggin ] && \
+ rm  $HOME/.profile.d/disable.uc4.loggin 
 
 touch $HOME/.profile.d/empty
 cp user.profile   $HOME/.profile 
-cp uc4.logging    $HOME/.profile.d/disable.uc4.logging
 cp editrc         $HOME/.editrc
 
 cp _QMGR_.profile   $HOME/qmgr.profile

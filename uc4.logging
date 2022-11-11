@@ -1,2 +1,0 @@
-# adjust path to the project
-[ -f /uc4bin/uc4/appl/config/envset ] && source /uc4bin/uc4/appl/config/envset 
