@@ -7,18 +7,10 @@
     last
     ls
     ps
+    uname 
     uptime
     who
   </exec>
-</command>
-
-<command>
-  <exec>
-    uname 
-  </exec>
-  <arg>
-    -n
-  </arg>
 </command>
 
 <command>
