@@ -27,6 +27,8 @@
     ffstsummary
     dspmq
     dspmqver
+    mqconfig 
+    chkconfig.ksh
   </exec>
 </command>
 

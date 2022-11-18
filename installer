@@ -67,6 +67,7 @@ cp _QMGR_.profile   $HOME/qmgr.profile
 cp user@.service    $HOME/system
 cp mq.ctrl.ksh      $HOME/bin
 cp xapass.pl        $HOME/bin 
+cp chkconfig.ksh    $HOME/bin 
 cp strmqm           $HOME/.bin 
 cp endmqm           $HOME/.bin 
 cp mq.serv.exec.ksh $HOME/.bin 
