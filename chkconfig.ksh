@@ -11,7 +11,7 @@
 # user mqm
 # ------------------------------------------------------------------------------
 echo "checking user mqm "
-echo -ne "\tuser mqm exists\t\t............... " 
+echo -ne "\tuser mqm exists\t\t..................... " 
 getent passwd mqm >> /dev/null
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -22,7 +22,7 @@ else
 fi
 
 id=$(id -u mqm)
-echo -ne "\tuser mqm id $id\t\t............... "
+echo -ne "\tuser mqm id $id \t..................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4010' ]] ; then
@@ -32,7 +32,7 @@ else
 fi
 
 id=$(id -g mqm)
-echo -ne "\tgroup mqm id $id\t............... "
+echo -ne "\tgroup mqm id $id\t..................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4000' ]] ; then
@@ -42,9 +42,9 @@ else
 fi
   
 pswd=$(getent passwd mqm) 
-shell=$(echo $pswd | awk -F: '{print $7}')
-echo -en "\tcheck mqm shell\t\t............... "
-if [[ $shell = "/usr/bin/ksh" ]] 
+shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+echo -en "\tcheck mqm shell\t\t..................... "
+if [[ $shell = "ksh" ]] 
 then
   echo "OK" 
 else
@@ -52,7 +52,7 @@ else
 fi
 
 grp=$(groups mqm | awk -F: '{print $2}')
-echo  -ne "\tprimary group mqm\t............... "
+echo  -ne "\tprimary group mqm\t..................... "
 if [[ $(echo $grp | grep -q "^mqm ") -eq 0 ]]
 then
   echo "OK"
@@ -61,7 +61,7 @@ else
 fi
 grp=${grp/mqm / }
 
-echo  -ne "\tsecondary group systemd-journal ....... "
+echo  -ne "\tsecondary group systemd-journal ............. "
 if [[ $(echo $grp | grep -q "systemd-journal") -eq 0 ]]
 then
   echo "OK"
@@ -70,7 +70,7 @@ else
 fi
 grp=${grp/systemd-journal/ }
 
-echo  -ne "\tsecondary group mqmon\t............... "
+echo  -ne "\tsecondary group mqmon\t..................... "
 if [[ $(echo $grp | grep -q "mqmon") -eq 0 ]]
 then
   echo "OK"
@@ -86,7 +86,7 @@ then
 else
   for sec in $(echo $grp)
   do
-    echo -e "\t\tuser mqm in group $sec ...... WAR"
+    echo -e "\t\tuser mqm in group $sec\t..... WAR"
   done
 fi
 
@@ -95,12 +95,12 @@ grp=$(getent group mqm | awk -F: '{print $4}' | tr -d " " )
 
 if [[ -z "$grp" ]]
 then 
-  echo "............... OK"
+  echo "..................... OK"
   else
     echo " :"
     for member in $(echo $grp | tr "," " " )
     do
-      echo -e "\t\tuser $member in group mqm ...... ERR"
+      echo -e "\t\tuser $member in group mqm ............ ERR"
     done
 fi
 
@@ -108,7 +108,7 @@ fi
 # user mcaadm
 # ------------------------------------------------------------------------------
 echo "checking user mcaadm "
-echo -ne "\tuser mcaadm exists\t............... " 
+echo -ne "\tuser mcaadm exists\t..................... " 
 pswd=$(getent passwd mcaadm) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -118,9 +118,9 @@ else
   echo "ERR  failed user mcaadm doesnt exist" 
 fi
 
-shell=$(echo $pswd | awk -F: '{print $7}')
-echo -en "\tcheck mcaadm shell\t............... "
-if [[ $shell = "/usr/sbin/nologin" ]] 
+shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+echo -en "\tcheck mcaadm shell\t..................... "
+if [[ $shell = "nologin" ]] 
 then
   echo "OK" 
 else
@@ -128,7 +128,7 @@ else
 fi
 
 grp=$(groups mcaadm | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmcaadm group membership\t............... "
+echo -en "\tmcaadm group membership\t..................... "
 if [[ $grp  = 'mcaadm' ]]
 then
   echo "OK"
@@ -137,14 +137,14 @@ else
 fi
 
 grp=$(getent group mcaadm | awk -F: '{print $4}')
-echo -en "\tmcaadm group member\t............... " 
+echo -en "\tmcaadm group member\t..................... " 
 if [[ -z ${grp// } ]]
 then
   echo "OK"
 else
   for $member in $(echo $grp)
   do
-    echo -e "\t\tuser $member in group mcaadm ...... WAR"
+    echo -e "\t\tuser $member in group mcaadm ............ WAR"
   done
 fi
 
@@ -152,7 +152,7 @@ fi
 # user mqdeploy
 # ------------------------------------------------------------------------------
 echo "checking user mqdeploy "
-echo -ne "\tuser mqdeploy exists\t............... " 
+echo -ne "\tuser mqdeploy exists\t..................... " 
 pswd=$(getent passwd mqdeploy) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -162,9 +162,9 @@ else
   echo "ERR  failed user mqdeploy doesnt exist" 
 fi
 
-shell=$(echo $pswd | awk -F: '{print $7}')
-echo -en "\tcheck mqdeploy shell\t............... "
-if [[ $shell = "/usr/sbin/nologin" ]] 
+shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+echo -en "\tcheck mqdeploy shell\t..................... "
+if [[ $shell = "nologin" ]] 
 then
   echo "OK" 
 else
@@ -172,7 +172,7 @@ else
 fi
 
 grp=$(groups mqdeploy | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmqdeploy group membership ............. "
+echo -en "\tmqdeploy group membership ................... "
 if [[ $grp  = 'mqdeploy' ]]
 then
   echo "OK"
@@ -181,14 +181,14 @@ else
 fi
 
 grp=$(getent group mqdeploy | awk -F: '{print $4}')
-echo -en "\tmqdeploy group member\t............... " 
+echo -en "\tmqdeploy group member\t..................... " 
 if [[ -z ${grp// } ]]
 then
   echo "OK"
 else
   for $member in $(echo $grp)
   do
-    echo -e "\t\tuser $member in group mqdeploy ...... WAR"
+    echo -e "\t\tuser $member in group mqdeploy ............ WAR"
   done
 fi
 
@@ -196,7 +196,7 @@ fi
 # user mqmon
 # ------------------------------------------------------------------------------
 echo "checking user mqmon "
-echo -ne "\tuser mqmon exists\t............... " 
+echo -ne "\tuser mqmon exists\t..................... " 
 pswd=$(getent passwd mqmon) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -206,9 +206,9 @@ else
   echo "ERR  failed user mqmon doesnt exist" 
 fi
 
-shell=$(echo $pswd | awk -F: '{print $7}')
-echo -en "\tcheck mqmon shell\t............... "
-if [[ $shell = "/usr/bin/ksh" ]] 
+shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+echo -en "\tcheck mqmon shell\t..................... "
+if [[ $shell = "ksh" ]] 
 then
   echo "OK" 
 else
@@ -216,7 +216,7 @@ else
 fi
 
 grp=$(groups mqmon | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmqmon group membership\t............... "
+echo -en "\tmqmon group membership\t..................... "
 if [[ $grp  = 'mqmon' ]]
 then
   echo "OK"
@@ -225,14 +225,14 @@ else
 fi
 
 grp=$(getent group mqdeploy | awk -F: '{print $4}')
-echo -en "\tmqdeploy group member\t............... " 
+echo -en "\tmqdeploy group member\t..................... " 
 if [[ -z ${grp// } ]]
 then
   echo "OK"
 else
   for $member in $(echo $grp)
   do
-    echo -e "\t\tuser $member in group mqmon ...... WAR"
+    echo -e "\t\tuser $member in group mqmon ............ WAR"
   done
 fi
 } 
@@ -246,7 +246,7 @@ fi
 echo
 dspver="/usr/bin/dspmqver"
 echo "installation check"
-echo -en "\tprimary installation set\t....... " ;
+echo -en "\tprimary installation set\t............. " ;
 if [[ -x $dspver ]]
 then
   echo "OK"
@@ -281,7 +281,7 @@ do
   ver=$($cmd -f 2 -b)
   echo -e "\n\tchecking $ver"
 
-  echo -en "\t\tkeep installation\t....... "
+  echo -en "\t\tkeep installation\t............. "
   if [[ $ver < $qmgrver ]]
   then
     echo -e "ERR"
@@ -291,7 +291,7 @@ do
   # --------------------------------------------------------
   # Server
   # --------------------------------------------------------
-  echo -en "\t\tServer or client\t....... "
+  echo -en "\t\tServer or client\t............. "
   name=$($cmd -p 1 -f 1 -b )
   subver=$($cmd -p 1 -f 2 -b )
   if [[ $name = "IBM MQ" ]]
@@ -309,7 +309,7 @@ do
   # --------------------------------------------------------
   # Java
   # --------------------------------------------------------
-  echo -en "\t\tJava\t....................... "
+  echo -en "\t\tJava\t............................. "
   name=$($cmd -p 2 -f 1 -b )
   subver=$($cmd -p 2 -f 2 -b )
   if [[ $name = "IBM MQ classes for Java" ]]
@@ -327,7 +327,7 @@ do
   # --------------------------------------------------------
   # JMS
   # --------------------------------------------------------
-  echo -en "\t\tJMS\t....................... "
+  echo -en "\t\tJMS\t............................. "
   subver=$($cmd -p 4 -f 2 -b | head -1 )
 
   if [[ $subver = $ver  ]]
@@ -344,7 +344,7 @@ do
   # --------------------------------------------------------
   name=$(  $cmd -p 64 -f 1 -b | grep -v AMQ8250I)
   subver=$($cmd -p 64 -f 2 -b | grep -v AMQ8250I)
-  echo -en "\t\tGSK (V $subver)\t....... "
+  echo -en "\t\tGSK (V $subver)\t............. "
   if [[ $name = "IBM Global Security Kit for IBM MQ" ]]
   then
     echo "OK"
@@ -359,9 +359,9 @@ do
   echo -en "\t\tAMS "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
   then 
-    echo -e "(not installed)\t....... OK"
+    echo -e "(not installed)\t............. OK"
   else
-    echo -e "(installed)\t....... ERR"
+    echo -e "(installed)\t............. ERR"
   fi
 
   # --------------------------------------------------------
@@ -371,13 +371,21 @@ do
   echo -en "\t\tAMQP "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
   then 
-    echo -e "(not installed)\t....... OK"
+    echo -e "(not installed)\t............. OK"
   else
-    echo -e "(installed)\t....... ERR"
+    echo -e "(installed)\t............. ERR"
   fi
 done
 
-
 } 
 
-
+################################################################################
+#
+# QMGR
+#
+################################################################################
+for qmgr in $(dspmq | tr "()" " " | awk '{print $2}')
+do
+  echo ""
+  echo "checking user qmgr $qmgr "
+done
