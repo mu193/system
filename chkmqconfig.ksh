@@ -1,11 +1,15 @@
 #!/usr/bin/ksh
 
+PAGER=
+
+[ -z "$1" ] || PAGER="$1" 
+
 {
+cat <<EOF
 ################################################################################
-#
 # USER CHECK
-#
 ################################################################################
+EOF
 
 # ------------------------------------------------------------------------------
 # user mqm
@@ -235,17 +239,16 @@ else
     echo -e "\t\tuser $member in group mqmon ............ WAR"
   done
 fi
-} 
+} |$PAGER
 
-################################################################################
-#
-# INSTALLATION
-# 
-################################################################################
 {
+cat <<EOF
+################################################################################
+# INSTALLATION CHECK
+################################################################################
+EOF
 echo
 dspver="/usr/bin/dspmqver"
-echo "installation check"
 echo -en "\tprimary installation set\t............. " ;
 if [[ -x $dspver ]]
 then
@@ -377,15 +380,32 @@ do
   fi
 done
 
-} 
+} | $PAGER
 
-################################################################################
-#
-# QMGR
-#
-################################################################################
 for qmgr in $(dspmq | tr "()" " " | awk '{print $2}')
 do
-  echo ""
+{
+cat <<EOF
+################################################################################
+# QMGR CHECK $qmgr
+################################################################################
+EOF
   echo "checking user qmgr $qmgr "
+  # 1   - get all RCVR & SVRCONN chls
+  # 1.1 - check if mcauser set to 'dummy'
+  # 1.2 - check if CHLAUTH exists
+  # 1.3 - check if MCAUSER in CHLAUTH has unvalid shell 
+  
+  # 2. check file systems (must be own FS, credentials, size)
+  # 2.1 data 
+  # 2.2 log 
+  # 2.3 var 
+  # 2.4 opt 
+  # 2.5 home 
+
+  # 3. certifcates
+  # 3.1 certlabl must exist
+  # 3.2 internal must exist
+  # 3.3 CA's must exist (depends on environment)
+} | $PAGER
 done
