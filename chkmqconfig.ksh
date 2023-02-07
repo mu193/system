@@ -1,6 +1,13 @@
+################################################################################
+#
+# chkmqconfig.kshq
+#
+# check user configuration:
+#   - mqm (user & groups) 
+################################################################################
 #!/usr/bin/ksh
 
-PAGER=
+PAGER=cat
 
 [ -z "$1" ] || PAGER="$1" 
 
@@ -14,8 +21,12 @@ EOF
 # ------------------------------------------------------------------------------
 # user mqm
 # ------------------------------------------------------------------------------
-echo "checking user mqm "
-echo -ne "\tuser mqm exists\t\t..................... " 
+
+# ----------------------------------------------------------
+# check if user mqm exists
+# ----------------------------------------------------------
+echo "check user mqm "
+echo -ne "\tuser mqm exists\t\t....................... " 
 getent passwd mqm >> /dev/null
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -25,8 +36,11 @@ else
   echo "ERR  failed user mqm doesnt exist" 
 fi
 
+# ----------------------------------------------------------
+# check if user mqm has a right id (400 / 4010)
+# ----------------------------------------------------------
 id=$(id -u mqm)
-echo -ne "\tuser mqm id $id \t..................... "
+echo -ne "\tuser mqm id $id \t....................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4010' ]] ; then
@@ -35,8 +49,11 @@ else
   echo "ERR wrong id"
 fi
 
+# ----------------------------------------------------------
+# check if user mqm has right group id (400 / 4000)
+# ----------------------------------------------------------
 id=$(id -g mqm)
-echo -ne "\tgroup mqm id $id\t..................... "
+echo -ne "\tgroup mqm id $id\t....................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4000' ]] ; then
@@ -45,9 +62,12 @@ else
   echo "ERR wrong id"
 fi
   
+# ----------------------------------------------------------
+# check if user mqm has the right shell
+# ----------------------------------------------------------
 pswd=$(getent passwd mqm) 
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
-echo -en "\tcheck mqm shell\t\t..................... "
+echo -en "\tmqm shell\t\t....................... "
 if [[ $shell = "ksh" ]] 
 then
   echo "OK" 
@@ -55,8 +75,11 @@ else
   echo -e "ERR\n\t\t $shell not allowed"
 fi
 
+# ----------------------------------------------------------
+# check if mqm is a primary group of user mqm
+# ----------------------------------------------------------
 grp=$(groups mqm | awk -F: '{print $2}')
-echo  -ne "\tprimary group mqm\t..................... "
+echo  -ne "\tprimary group mqm\t....................... "
 if [[ $(echo $grp | grep -q "^mqm ") -eq 0 ]]
 then
   echo "OK"
@@ -65,7 +88,10 @@ else
 fi
 grp=${grp/mqm / }
 
-echo  -ne "\tsecondary group systemd-journal ............. "
+# ----------------------------------------------------------
+# check if mqm is member of system-jounal
+# ----------------------------------------------------------
+echo  -ne "\tsecondary group systemd-journal ............... "
 if [[ $(echo $grp | grep -q "systemd-journal") -eq 0 ]]
 then
   echo "OK"
@@ -74,7 +100,10 @@ else
 fi
 grp=${grp/systemd-journal/ }
 
-echo  -ne "\tsecondary group mqmon\t..................... "
+# ----------------------------------------------------------
+# check if mqm is member of group mqmon
+# ----------------------------------------------------------
+echo  -ne "\tsecondary group mqmon\t....................... "
 if [[ $(echo $grp | grep -q "mqmon") -eq 0 ]]
 then
   echo "OK"
@@ -83,36 +112,46 @@ else
 fi
 grp=${grp/mqmon/ }
 
+# ----------------------------------------------------------
+# check if mqm has other groups 
+# ----------------------------------------------------------
 echo  -e "\tcheck other groups:" 
 if [[ -z ${grp// } ]]
 then
-  echo "OK"
+  echo ":OK"
 else
   for sec in $(echo $grp)
   do
-    echo -e "\t\tuser mqm in group $sec\t..... WAR"
+    echo -e "\t\tuser mqm in group $sec\t....... WAR"
   done
 fi
 
+# ----------------------------------------------------------
+# check if other user are in group mqm
+# ----------------------------------------------------------
 echo -en "\tcheck group mqm"
 grp=$(getent group mqm | awk -F: '{print $4}' | tr -d " " )
 
 if [[ -z "$grp" ]]
 then 
-  echo "..................... OK"
+  echo "...................... OK"
   else
     echo " :"
     for member in $(echo $grp | tr "," " " )
     do
-      echo -e "\t\tuser $member in group mqm ............ ERR"
+      echo -e "\t\tuser $member in group mqm\t....... ERR"
     done
 fi
 
 # ------------------------------------------------------------------------------
 # user mcaadm
 # ------------------------------------------------------------------------------
-echo "checking user mcaadm "
-echo -ne "\tuser mcaadm exists\t..................... " 
+
+# ----------------------------------------------------------
+# check if user mcaadm exists
+# ----------------------------------------------------------
+echo -e "\ncheck user mcaadm "
+echo -ne "\tuser mcaadm exists\t....................... " 
 pswd=$(getent passwd mcaadm) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -122,41 +161,55 @@ else
   echo "ERR  failed user mcaadm doesnt exist" 
 fi
 
+# ----------------------------------------------------------
+# check if mcaadm has unvalid shell
+# ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
-echo -en "\tcheck mcaadm shell\t..................... "
+echo -en "\tmcaadm shell\t\t....................... "
 if [[ $shell = "nologin" ]] 
 then
   echo "OK" 
 else
-  echo -e "ERR\n\t\t$shell not allowed"
+  echo -e "ERR\t$shell not allowed"
 fi
 
-grp=$(groups mcaadm | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmcaadm group membership\t..................... "
-if [[ $grp  = 'mcaadm' ]]
+# ----------------------------------------------------------
+# check if mcaadm has primary group mcaadm
+# ----------------------------------------------------------
+grp=$(groups mcaadm | awk -F: '{print $2}' )
+echo -en "\tprimary group mcaadm\t....................... "
+if [[ $(echo $grp | grep -q "^mcaadm ") -eq 0 ]]
 then
   echo "OK"
 else
   echo "ERR mcaadm is member of $grp "
 fi
+grp=${grp/mcaadm / }
 
+# ----------------------------------------------------------
+# check if other user in group mcaadm
+# ----------------------------------------------------------
 grp=$(getent group mcaadm | awk -F: '{print $4}')
-echo -en "\tmcaadm group member\t..................... " 
+echo -en "\tmcaadm group member\t....................... " 
 if [[ -z ${grp// } ]]
 then
   echo "OK"
 else
   for $member in $(echo $grp)
   do
-    echo -e "\t\tuser $member in group mcaadm ............ WAR"
+    echo -e "\t\tuser $member in group mcaadm ............ ERR"
   done
 fi
 
 # ------------------------------------------------------------------------------
 # user mqdeploy
 # ------------------------------------------------------------------------------
-echo "checking user mqdeploy "
-echo -ne "\tuser mqdeploy exists\t..................... " 
+
+# ----------------------------------------------------------
+# check if user mqdeploy exists
+# ----------------------------------------------------------
+echo -e "\ncheck user mqdeploy "
+echo -ne "\tuser mqdeploy exists\t....................... " 
 pswd=$(getent passwd mqdeploy) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -166,41 +219,56 @@ else
   echo "ERR  failed user mqdeploy doesnt exist" 
 fi
 
+# ----------------------------------------------------------
+# check if user has a unvalid shell
+# ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
-echo -en "\tcheck mqdeploy shell\t..................... "
+echo -en "\tmqdeploy shell\t\t....................... "
 if [[ $shell = "nologin" ]] 
 then
   echo "OK" 
 else
-  echo -e "ERR\n\t\t $shell not allowed"
+  echo -e "ERR $shell not allowed"
 fi
 
-grp=$(groups mqdeploy | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmqdeploy group membership ................... "
-if [[ $grp  = 'mqdeploy' ]]
+# ----------------------------------------------------------
+# check if mqdeploy has primary group mqdeploy
+# ----------------------------------------------------------
+grp=$(groups mqdeploy | awk -F: '{print $2}' )
+echo -en "\tprimary group mqdeploy\t....................... "
+if [[ $(echo $grp | grep -q "^mqdeploy ") -eq 0 ]]
 then
   echo "OK"
 else
   echo "ERR mqdeploy is member of $grp "
 fi
+grp=${grp/mqdeploy / }
 
+# ----------------------------------------------------------
+# check if other user are member of group mqdeploy
+# ----------------------------------------------------------
 grp=$(getent group mqdeploy | awk -F: '{print $4}')
-echo -en "\tmqdeploy group member\t..................... " 
-if [[ -z ${grp// } ]]
-then
-  echo "OK"
+echo -en "\tmqdeploy group member\t"
+
+if [[ -z "$grp" ]]
+then 
+  echo " ...................... OK"
 else
-  for $member in $(echo $grp)
+  for member in $(echo $grp | tr "," " " )
   do
-    echo -e "\t\tuser $member in group mqdeploy ............ WAR"
+    echo -e "\t\tuser $member in group mqdeploy .............. ERR"
   done
 fi
 
 # ------------------------------------------------------------------------------
 # user mqmon
 # ------------------------------------------------------------------------------
-echo "checking user mqmon "
-echo -ne "\tuser mqmon exists\t..................... " 
+
+# ----------------------------------------------------------
+# check if user mqmon exists
+# ----------------------------------------------------------
+echo -e "\ncheck user mqmon "
+echo -ne "\tuser mqmon exists\t....................... " 
 pswd=$(getent passwd mqmon) 
 rc=$?
 if [[ $rc -eq 0 ]]
@@ -210,34 +278,56 @@ else
   echo "ERR  failed user mqmon doesnt exist" 
 fi
 
+# ----------------------------------------------------------
+# check if user mqmon has korn shell
+# ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
-echo -en "\tcheck mqmon shell\t..................... "
+echo -en "\tcheck mqmon shell\t....................... "
 if [[ $shell = "ksh" ]] 
 then
   echo "OK" 
 else
-  echo -e "ERR\n\t\t $shell not allowed"
+  echo -e "ERR $shell not allowed"
 fi
 
-grp=$(groups mqmon | awk -F: '{print $1}' | tr -d " " )
-echo -en "\tmqmon group membership\t..................... "
-if [[ $grp  = 'mqmon' ]]
+# ----------------------------------------------------------
+# check if user mqmon has a primary group mqmon
+# ----------------------------------------------------------
+grp=$(groups mqmon | awk -F: '{print $2}' )
+echo -en "\tprimary group mqmon\t....................... "
+if [[ $(echo $grp | grep -q "^mqmon ") -eq 0 ]]
 then
   echo "OK"
 else
-  echo "ERR mqdeploy is member of $grp "
+  echo "ERR mqmon is member of $grp "
 fi
+grp=${grp/mqmon/ }
 
-grp=$(getent group mqdeploy | awk -F: '{print $4}')
-echo -en "\tmqdeploy group member\t..................... " 
+# ----------------------------------------------------------
+# check if user mqmon is member of systemd-journal
+# ----------------------------------------------------------
+echo -en "\tsecondary group systemd-journal\t............... "
+if [[ $(echo $grp | grep -q "systemd-journal") -eq 0 ]]
+then
+  echo "OK"
+else
+  echo "ERR"
+fi
+grp=${grp/systemd-journal/ }
+
+# ----------------------------------------------------------
+# check if other user are member of group of mqmon
+# ----------------------------------------------------------
+echo -en "\tmqmon group member"
 if [[ -z ${grp// } ]]
 then
-  echo "OK"
+  echo -e "\t................... OK"
 else
-  for $member in $(echo $grp)
+  for member in $(echo $grp)
   do
-    echo -e "\t\tuser $member in group mqmon ............ WAR"
+    echo -en "\n\t\tgroup mqmon has member $member\t....... WAR"
   done
+  echo ""
 fi
 } |$PAGER
 
@@ -249,7 +339,7 @@ cat <<EOF
 EOF
 echo
 dspver="/usr/bin/dspmqver"
-echo -en "\tprimary installation set\t............. " ;
+echo -en "primary installation set\t....................... " ;
 if [[ -x $dspver ]]
 then
   echo "OK"
@@ -282,9 +372,9 @@ for inst in $($dspver -i | awk -F: '$1=/InstPath/ {print $2}')
 do
   cmd="$inst/bin/dspmqver" 
   ver=$($cmd -f 2 -b)
-  echo -e "\n\tchecking $ver"
+  echo -e "\ncheckg MQ-Ver:$ver"
 
-  echo -en "\t\tkeep installation\t............. "
+  echo -en "\tkeep installation\t....................... "
   if [[ $ver < $qmgrver ]]
   then
     echo -e "ERR"
@@ -294,7 +384,7 @@ do
   # --------------------------------------------------------
   # Server
   # --------------------------------------------------------
-  echo -en "\t\tServer or client\t............. "
+  echo -en "\tServer or client\t....................... "
   name=$($cmd -p 1 -f 1 -b )
   subver=$($cmd -p 1 -f 2 -b )
   if [[ $name = "IBM MQ" ]]
@@ -312,7 +402,7 @@ do
   # --------------------------------------------------------
   # Java
   # --------------------------------------------------------
-  echo -en "\t\tJava\t............................. "
+  echo -en "\tJava\t....................................... "
   name=$($cmd -p 2 -f 1 -b )
   subver=$($cmd -p 2 -f 2 -b )
   if [[ $name = "IBM MQ classes for Java" ]]
@@ -330,7 +420,7 @@ do
   # --------------------------------------------------------
   # JMS
   # --------------------------------------------------------
-  echo -en "\t\tJMS\t............................. "
+  echo -en "\tJMS\t....................................... "
   subver=$($cmd -p 4 -f 2 -b | head -1 )
 
   if [[ $subver = $ver  ]]
@@ -340,14 +430,14 @@ do
     echo "ERR ver $subver"
   fi
 
-  $cmd -p 4 -f 1 -b | awk '!/^$/{printf("\t\t\t%s\n",$0)}'
+  $cmd -p 4 -f 1 -b | awk '!/^$/{printf("\t\t%s\n",$0)}'
 
   # --------------------------------------------------------
   # GSK
   # --------------------------------------------------------
   name=$(  $cmd -p 64 -f 1 -b | grep -v AMQ8250I)
   subver=$($cmd -p 64 -f 2 -b | grep -v AMQ8250I)
-  echo -en "\t\tGSK (V $subver)\t............. "
+  echo -en "\tGSK (V $subver)\t....................... "
   if [[ $name = "IBM Global Security Kit for IBM MQ" ]]
   then
     echo "OK"
@@ -359,24 +449,24 @@ do
   # AMS
   # --------------------------------------------------------
   name=$($cmd -p 128 -f 1 -b )
-  echo -en "\t\tAMS "
+  echo -en "\tAMS "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
   then 
-    echo -e "(not installed)\t............. OK"
+    echo -e "(not installed)\t....................... OK"
   else
-    echo -e "(installed)\t............. ERR"
+    echo -e "(installed)\t....................... ERR"
   fi
 
   # --------------------------------------------------------
   # AMQP
   # --------------------------------------------------------
   name=$($cmd -p 512 -f 1 -b )
-  echo -en "\t\tAMQP "
+  echo -en "\tAMQP "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
   then 
-    echo -e "(not installed)\t............. OK"
+    echo -e "(not installed)\t....................... OK"
   else
-    echo -e "(installed)\t............. ERR"
+    echo -e "(installed)\t....................... ERR"
   fi
 done
 
