@@ -15,7 +15,7 @@ mqinstaller : selfinstall arch.tar.gz
 
 arch.tar.gz : $(SRC) installer cert.tar
 	date "+mqinstaller %Y-%m-%d" > version
-	tar czf $@ $^ version cert.tar
+	tar czf $@ $^ version 
 	rm version
 
 cert.tar : Clearstream_Banking_CA_2.crt BAT_Clearstream_CA.pub               \
