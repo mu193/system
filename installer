@@ -27,6 +27,11 @@ case $OPT in
        exit 1
      fi
   ;;
+  "--container")
+    [ -d /var/tmp/mq-inst ] || mkdir /var/tmp/mq-inst
+    cp * /var/tmp/mq-inst
+    exit 0
+  ;;
   "*")
     echo "  unknwon attribte"
     exit  1
