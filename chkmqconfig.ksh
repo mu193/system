@@ -3,13 +3,13 @@
 # chkmqconfig.kshq
 #
 # check user configuration:
-#   - mqm (user & groups) 
+#   - mqm (user & groups)
 ################################################################################
 #!/usr/bin/ksh
 
 PAGER=cat
 
-[ -z "$1" ] || PAGER="$1" 
+[ -z "$1" ] || PAGER="$1"
 
 {
 cat <<EOF
@@ -26,14 +26,14 @@ EOF
 # check if user mqm exists
 # ----------------------------------------------------------
 echo "check user mqm "
-echo -ne "\tuser mqm exists\t\t....................... " 
+echo -ne "\tuser mqm exists\t\t....................... "
 getent passwd mqm >> /dev/null
 rc=$?
 if [[ $rc -eq 0 ]]
-then 
+then
   echo "OK" ;
 else
-  echo "ERR  failed user mqm doesnt exist" 
+  echo "ERR  failed user mqm doesnt exist"
 fi
 
 # ----------------------------------------------------------
@@ -44,7 +44,7 @@ echo -ne "\tuser mqm id $id \t....................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4010' ]] ; then
-  echo "OK for Luxemburg" 
+  echo "OK for Luxemburg"
 else
   echo "ERR wrong id"
 fi
@@ -57,20 +57,20 @@ echo -ne "\tgroup mqm id $id\t....................... "
 if [[ $id -eq '400' ]] ; then
   echo "OK for Frankfurt"
 elif [[ $id -eq '4000' ]] ; then
-  echo "OK for Luxemburg" 
+  echo "OK for Luxemburg"
 else
   echo "ERR wrong id"
 fi
-  
+
 # ----------------------------------------------------------
 # check if user mqm has the right shell
 # ----------------------------------------------------------
-pswd=$(getent passwd mqm) 
+pswd=$(getent passwd mqm)
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
 echo -en "\tmqm shell\t\t....................... "
-if [[ $shell = "ksh" ]] 
+if [[ $shell = "ksh" ]]
 then
-  echo "OK" 
+  echo "OK"
 else
   echo -e "ERR\n\t\t $shell not allowed"
 fi
@@ -113,9 +113,9 @@ fi
 grp=${grp/mqmon/ }
 
 # ----------------------------------------------------------
-# check if mqm has other groups 
+# check if mqm has other groups
 # ----------------------------------------------------------
-echo  -e "\tcheck other groups:" 
+echo  -e "\tcheck other groups:"
 if [[ -z ${grp// } ]]
 then
   echo ":OK"
@@ -133,7 +133,7 @@ echo -en "\tcheck group mqm"
 grp=$(getent group mqm | awk -F: '{print $4}' | tr -d " " )
 
 if [[ -z "$grp" ]]
-then 
+then
   echo "...................... OK"
   else
     echo " :"
@@ -151,14 +151,14 @@ fi
 # check if user mcaadm exists
 # ----------------------------------------------------------
 echo -e "\ncheck user mcaadm "
-echo -ne "\tuser mcaadm exists\t....................... " 
-pswd=$(getent passwd mcaadm) 
+echo -ne "\tuser mcaadm exists\t....................... "
+pswd=$(getent passwd mcaadm)
 rc=$?
 if [[ $rc -eq 0 ]]
-then 
+then
   echo "OK" ;
 else
-  echo "ERR  failed user mcaadm doesnt exist" 
+  echo "ERR  failed user mcaadm doesnt exist"
 fi
 
 # ----------------------------------------------------------
@@ -166,9 +166,9 @@ fi
 # ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
 echo -en "\tmcaadm shell\t\t....................... "
-if [[ $shell = "nologin" ]] 
+if [[ $shell = "nologin" ]]
 then
-  echo "OK" 
+  echo "OK"
 else
   echo -e "ERR\t$shell not allowed"
 fi
@@ -190,7 +190,7 @@ grp=${grp/mcaadm / }
 # check if other user in group mcaadm
 # ----------------------------------------------------------
 grp=$(getent group mcaadm | awk -F: '{print $4}')
-echo -en "\tmcaadm group member\t....................... " 
+echo -en "\tmcaadm group member\t....................... "
 if [[ -z ${grp// } ]]
 then
   echo "OK"
@@ -209,14 +209,14 @@ fi
 # check if user mqdeploy exists
 # ----------------------------------------------------------
 echo -e "\ncheck user mqdeploy "
-echo -ne "\tuser mqdeploy exists\t....................... " 
-pswd=$(getent passwd mqdeploy) 
+echo -ne "\tuser mqdeploy exists\t....................... "
+pswd=$(getent passwd mqdeploy)
 rc=$?
 if [[ $rc -eq 0 ]]
-then 
+then
   echo "OK" ;
 else
-  echo "ERR  failed user mqdeploy doesnt exist" 
+  echo "ERR  failed user mqdeploy doesnt exist"
 fi
 
 # ----------------------------------------------------------
@@ -224,9 +224,9 @@ fi
 # ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
 echo -en "\tmqdeploy shell\t\t....................... "
-if [[ $shell = "nologin" ]] 
+if [[ $shell = "nologin" ]]
 then
-  echo "OK" 
+  echo "OK"
 else
   echo -e "ERR $shell not allowed"
 fi
@@ -251,7 +251,7 @@ grp=$(getent group mqdeploy | awk -F: '{print $4}')
 echo -en "\tmqdeploy group member\t"
 
 if [[ -z "$grp" ]]
-then 
+then
   echo " ...................... OK"
 else
   for member in $(echo $grp | tr "," " " )
@@ -268,14 +268,14 @@ fi
 # check if user mqmon exists
 # ----------------------------------------------------------
 echo -e "\ncheck user mqmon "
-echo -ne "\tuser mqmon exists\t....................... " 
-pswd=$(getent passwd mqmon) 
+echo -ne "\tuser mqmon exists\t....................... "
+pswd=$(getent passwd mqmon)
 rc=$?
 if [[ $rc -eq 0 ]]
-then 
+then
   echo "OK" ;
 else
-  echo "ERR  failed user mqmon doesnt exist" 
+  echo "ERR  failed user mqmon doesnt exist"
 fi
 
 # ----------------------------------------------------------
@@ -283,9 +283,9 @@ fi
 # ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
 echo -en "\tcheck mqmon shell\t....................... "
-if [[ $shell = "ksh" ]] 
+if [[ $shell = "ksh" ]]
 then
-  echo "OK" 
+  echo "OK"
 else
   echo -e "ERR $shell not allowed"
 fi
@@ -370,7 +370,7 @@ qmgrver=$(/usr/bin/dspmq -o installation | tr " " "\n"                   |\
 
 for inst in $($dspver -i | awk -F: '$1=/InstPath/ {print $2}')
 do
-  cmd="$inst/bin/dspmqver" 
+  cmd="$inst/bin/dspmqver"
   ver=$($cmd -f 2 -b)
   echo -e "\ncheckg MQ-Ver:$ver"
 
@@ -451,7 +451,7 @@ do
   name=$($cmd -p 128 -f 1 -b )
   echo -en "\tAMS "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
-  then 
+  then
     echo -e "(not installed)\t....................... OK"
   else
     echo -e "(installed)\t....................... ERR"
@@ -463,7 +463,7 @@ do
   name=$($cmd -p 512 -f 1 -b )
   echo -en "\tAMQP "
   if [[ $(echo $name | grep -q "^AMQ8250I:") -eq 0 ]]
-  then 
+  then
     echo -e "(not installed)\t....................... OK"
   else
     echo -e "(installed)\t....................... ERR"
@@ -484,14 +484,14 @@ EOF
   # 1   - get all RCVR & SVRCONN chls
   # 1.1 - check if mcauser set to 'dummy'
   # 1.2 - check if CHLAUTH exists
-  # 1.3 - check if MCAUSER in CHLAUTH has unvalid shell 
-  
+  # 1.3 - check if MCAUSER in CHLAUTH has unvalid shell
+
   # 2. check file systems (must be own FS, credentials, size)
-  # 2.1 data 
-  # 2.2 log 
-  # 2.3 var 
-  # 2.4 opt 
-  # 2.5 home 
+  # 2.1 data
+  # 2.2 log
+  # 2.3 var
+  # 2.4 opt
+  # 2.5 home
 
   # 3. certifcates
   # 3.1 certlabl must exist
@@ -499,3 +499,327 @@ EOF
   # 3.3 CA's must exist (depends on environment)
 } | $PAGER
 done
+
+# ----------------------------------------------------------
+#   1.1   - check if mcauser set to 'dummy' on all RCVR chls
+# ----------------------------------------------------------
+i=0
+echo -ne "checking mcauser set to 'dummy' on receiver channels\t....................... "
+for channel in $(echo "dis chl(*) chltype(rcvr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for the following channels: "
+      echo -ne "\t$channel\n"
+      let i++
+    else
+      echo -ne "\t$channel\n"
+  fi
+done
+
+if [[ -z "$channel" ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+#  1.2   - check if mcauser set to 'dummy' on all RQSTR chls
+# ----------------------------------------------------------
+i=0
+echo -ne "checking mcauser set to 'dummy' on requester channels\t....................... "
+for channel in $(echo "dis chl(*) chltype(rqstr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for the following channels: "
+      echo -ne "\t$channel\n"
+      let i++
+    else
+      echo -ne "\t$channel\n"
+  fi
+done
+
+if [[ -z "$channel" ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 1.3   - check if MCAUSER in CHLAUTH has invalid shell
+# ----------------------------------------------------------
+i=0
+echo -ne "chlauth mcauser shell set to 'nologin'\t....................... "
+for mcauser in $(echo "dis chlauth(*)" | runmqsc $qmgr | tr "()" " " | awk '$1~/MCAUSER/ {print $2}' | sort -u)
+do
+  pswd=$(getent passwd $mcauser)
+  shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+  if [ "$shell" != "nologin" ] | [ "$shell" != "false" ]
+    then
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed shell is not set to 'nologin' on following mca users: "
+        echo -ne "\t$mcauser\n"
+        let i++
+      else
+        echo -ne "\t$mcauser\n"
+        let i++
+    fi
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 2.1   - check FS User  (AMQ6242E)
+# ----------------------------------------------------------
+i=0
+echo -ne "MQ filesystems Ownership\t....................... "
+#    for ownership in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6242E:/ {print $4}')
+for ownership in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6242E:/ {print $5}')
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed User is not set to 'mqm' on following FSs: "
+      echo -ne "\t$ownership\n"
+      let i++
+    else
+      echo -ne "\t$ownership\n"
+      let i++
+  fi
+done
+
+# ----------------------------------------------------------
+# manual check on /home/mqm and /mq/log
+# ----------------------------------------------------------
+# /home/mqm
+for fs in $(find /home/mqm ! -user mqm )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for following FSs: "
+      echo -ne "\t$fs\n"
+      let i++
+    else
+      echo -ne "\t$fs\n"
+  fi
+done
+
+# /mq/log
+for fs in $(find /mq/log ! -user mqm )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for following FSs: "
+      echo -ne "\t$fs\n"
+      let i++
+    else
+      echo -ne "\t$fs\n"
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 2.2   - check FS Group  (AMQ6243E)
+# ----------------------------------------------------------
+i=0
+echo -ne "MQ filesystems Group\t....................... "
+#    for group in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
+for group in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed Group is not set to 'mqm' on following FSs: "
+      echo -ne "\t$group\n"
+      let i++
+    else
+      echo -ne "\t$group\n"
+      let i++
+  fi
+done
+
+# ----------------------------------------------------------
+# manual check on /home/mqm and /mq/log
+# ----------------------------------------------------------
+# /home/mqm
+for fs in $(find /home/mqm ! -group mqm )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for following FSs: "
+      echo -ne "\t$fs\n"
+      let i++
+    else
+      echo -ne "\t$fs\n"
+  fi
+done
+
+# /mq/log
+for fs in $(find /mq/log ! -group mqm )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for following FSs: "
+      echo -ne "\t$fs\n"
+      let i++
+    else
+      echo -ne "\t$fs\n"
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 2.3   - check FS Permission  (AMQ6244E)
+# ----------------------------------------------------------
+i=0
+echo -ne "MQ filesystems Permission\t....................... "
+#    for permission in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
+for permission in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed Permission is not set correctly on following FSs: "
+      echo -ne "\t$permission\n"
+      let i++
+    else
+      echo -ne "\t$permission\n"
+      let i++
+  fi
+done
+
+# ----------------------------------------------------------
+# manual check on /home/mqm and /mq/log
+# ----------------------------------------------------------
+# /home/mqm - G and O must not have W access
+for permission in $(find /home/mqm -perm /g=w,o=w )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed Permission is not set correctly on following FSs: "
+      echo -ne "\t$permission\n"
+      let i++
+    else
+      echo -ne "\t$permission\n"
+  fi
+done
+
+# /home/mqm/.ssh - G and O must have no priviledge
+for permission in $(find /home/mqm/.ssh ! -perm 700 )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed Permission is not set correctly on following FSs: "
+      echo -ne "\t$permission\n"
+      let i++
+    else
+      echo -ne "\t$permission\n"
+  fi
+done
+
+# /mq/log - O must have no priviledge
+for permission in $(find /mq/log -perm /o=rwx )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed Permission is not set correctly on following FSs: "
+      echo -ne "\t$permission\n"
+      let i++
+    else
+      echo -ne "\t$permission\n"
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+
+# ----------------------------------------------------------
+# 2.4   - check FS mountpoint
+# ----------------------------------------------------------
+echo -ne "FS Mountpoints\t\t....................... "
+i=0
+
+# /opt/mqm
+if [[ $(df -m /opt/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
+  then
+    echo "ERR failed for following FSs: "
+    echo -ne "\t/opt/mqm\n"
+    let i++
+fi
+
+# /home/mqm
+if [[ $(df -m /home/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
+  then
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t/home/mqm\n"
+        let i++
+      else
+        echo -ne "\t/home/mqm\n"
+    fi
+fi
+
+# /mq/log
+if [[ $(df -m /mq/log | awk '$1~/dev/ {print $6}' )  == "/" ]]
+  then
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t/mq/log\n"
+        let i++
+      else
+        echo -ne "\t/mq/log\n"
+    fi
+fi
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 3 - check Certificate in Keystore
+# ----------------------------------------------------------
+echo -ne "Default certificate\t....................... "
+certlabl=$(echo "dis QMGR CERTLABL" | runmqsc $qmgr   | tr "()" " " | awk '$1~/QMNAME/ {print $4}' )
+if [[ -z "$certlabl" ]]
+  then
+    echo "ERR failed CERTLABL not set in QMGR configuration"
+  else
+    sslkeyr=$(echo "dis QMGR SSLKEYR" | runmqsc $qmgr   | tr "()" " " | awk '$1~/QMNAME/ {print $4}' )
+    label=$(/usr/bin/runmqakm -cert -list -stashed -db $sslkeyr.kdb | grep -E "$certlabl" )
+    if [[ -z "$label" ]]
+      then
+        echo "ERR failed "$certlabl" not found in keystore"
+      else
+        echo "OK"
+    fi
+fi
+
+if [[ $certlabl != "$qmgr"_int ]]
+  then
+    echo -ne "Internal certificate\t....................... "
+    label=$(/usr/bin/runmqakm -cert -list -stashed -db $sslkeyr.kdb | grep -E "$qmgr"_int )
+    if [[ -z "$label" ]]
+      then
+        echo "ERR failed "$qmgr"_int not found in keystore"
+      else
+        echo "OK"
+    fi
+fi
+# ----------------------------------------------------------
+
+
