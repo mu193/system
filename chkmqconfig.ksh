@@ -472,10 +472,16 @@ done
 
 } | $PAGER
 
+
+################################################################################
+# loop over all queue manager 
+################################################################################
+
 for qmgr in $(dspmq | tr "()" " " | awk '{print $2}')
 do
 {
 cat <<EOF
+
 ################################################################################
 # QMGR CHECK $qmgr
 ################################################################################
@@ -499,6 +505,8 @@ EOF
   # 3.3 CA's must exist (depends on environment)
 } | $PAGER
 done
+
+# all under this point should be in a loop, otherwise only the last qmgr will be checked
 
 # ----------------------------------------------------------
 #   1.1   - check if mcauser set to 'dummy' on all RCVR chls
@@ -544,6 +552,8 @@ if [[ -z "$channel" ]]
     echo "OK"
 fi
 
+# SVRCONN is missing
+
 # ----------------------------------------------------------
 # 1.3   - check if MCAUSER in CHLAUTH has invalid shell
 # ----------------------------------------------------------
@@ -574,6 +584,9 @@ fi
 
 # ----------------------------------------------------------
 # 2.1   - check FS User  (AMQ6242E)
+# split this part into system and qmgr part
+# move system part to the top
+# move qmgr part into loop
 # ----------------------------------------------------------
 i=0
 echo -ne "MQ filesystems Ownership\t....................... "
@@ -595,6 +608,7 @@ done
 # manual check on /home/mqm and /mq/log
 # ----------------------------------------------------------
 # /home/mqm
+# move home to top
 for fs in $(find /home/mqm ! -user mqm )
 do
   if [[ i -eq 0 ]]
@@ -608,6 +622,7 @@ do
 done
 
 # /mq/log
+# move log to loop & reconsidure to use /mq/log/$qmgr 
 for fs in $(find /mq/log ! -user mqm )
 do
   if [[ i -eq 0 ]]
@@ -646,6 +661,8 @@ done
 
 # ----------------------------------------------------------
 # manual check on /home/mqm and /mq/log
+# move home to top
+# move /mq/log to loop, reconsidure /mq/log/$qmgr
 # ----------------------------------------------------------
 # /home/mqm
 for fs in $(find /home/mqm ! -group mqm )
@@ -680,6 +697,9 @@ fi
 
 # ----------------------------------------------------------
 # 2.3   - check FS Permission  (AMQ6244E)
+# split system and queue manager 
+# move system to top 
+# move qmgr to loop
 # ----------------------------------------------------------
 i=0
 echo -ne "MQ filesystems Permission\t....................... "
@@ -699,6 +719,8 @@ done
 
 # ----------------------------------------------------------
 # manual check on /home/mqm and /mq/log
+# move home to top
+# move log to loop, reconsidure /mq/log/$qmgr
 # ----------------------------------------------------------
 # /home/mqm - G and O must not have W access
 for permission in $(find /home/mqm -perm /g=w,o=w )
@@ -792,6 +814,7 @@ fi
 
 # ----------------------------------------------------------
 # 3 - check Certificate in Keystore
+# move to loop
 # ----------------------------------------------------------
 echo -ne "Default certificate\t....................... "
 certlabl=$(echo "dis QMGR CERTLABL" | runmqsc $qmgr   | tr "()" " " | awk '$1~/QMNAME/ {print $4}' )
