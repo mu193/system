@@ -1,3 +1,6 @@
+# mqmadm@syspmq4$ cat chkmqconfig.ksh
+# vmtestb2spocmq0339
+
 ################################################################################
 #
 # chkmqconfig.kshq
@@ -472,121 +475,33 @@ done
 
 } | $PAGER
 
-
-################################################################################
-# loop over all queue manager 
-################################################################################
-
-for qmgr in $(dspmq | tr "()" " " | awk '{print $2}')
-do
-{
 cat <<EOF
-
 ################################################################################
-# QMGR CHECK $qmgr
+# MQ CHECK 
 ################################################################################
 EOF
-  echo "checking user qmgr $qmgr "
-  # 1   - get all RCVR & SVRCONN chls
-  # 1.1 - check if mcauser set to 'dummy'
-  # 1.2 - check if CHLAUTH exists
-  # 1.3 - check if MCAUSER in CHLAUTH has unvalid shell
 
-  # 2. check file systems (must be own FS, credentials, size)
-  # 2.1 data
-  # 2.2 log
-  # 2.3 var
-  # 2.4 opt
-  # 2.5 home
+  # 1. check file systems (must be own FS, credentials, size)
+  # 1.1 data
+  # 1.2 log
+  # 1.3 var
+  # 1.4 opt
+  # 1.5 home
+
+  # for every QM
+  # 2.  - get all RCVR & SVRCONN chls
+  # 2.1 - check if mcauser set to 'dummy'
+  # 2.2 - check if CHLAUTH exists
+  # 2.3 - check if MCAUSER in CHLAUTH has unvalid shell
 
   # 3. certifcates
   # 3.1 certlabl must exist
   # 3.2 internal must exist
   # 3.3 CA's must exist (depends on environment)
-} | $PAGER
-done
 
-# all under this point should be in a loop, otherwise only the last qmgr will be checked
 
 # ----------------------------------------------------------
-#   1.1   - check if mcauser set to 'dummy' on all RCVR chls
-# ----------------------------------------------------------
-i=0
-echo -ne "checking mcauser set to 'dummy' on receiver channels\t....................... "
-for channel in $(echo "dis chl(*) chltype(rcvr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed for the following channels: "
-      echo -ne "\t$channel\n"
-      let i++
-    else
-      echo -ne "\t$channel\n"
-  fi
-done
-
-if [[ -z "$channel" ]]
-  then
-    echo "OK"
-fi
-
-# ----------------------------------------------------------
-#  1.2   - check if mcauser set to 'dummy' on all RQSTR chls
-# ----------------------------------------------------------
-i=0
-echo -ne "checking mcauser set to 'dummy' on requester channels\t....................... "
-for channel in $(echo "dis chl(*) chltype(rqstr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed for the following channels: "
-      echo -ne "\t$channel\n"
-      let i++
-    else
-      echo -ne "\t$channel\n"
-  fi
-done
-
-if [[ -z "$channel" ]]
-  then
-    echo "OK"
-fi
-
-# SVRCONN is missing
-
-# ----------------------------------------------------------
-# 1.3   - check if MCAUSER in CHLAUTH has invalid shell
-# ----------------------------------------------------------
-i=0
-echo -ne "chlauth mcauser shell set to 'nologin'\t....................... "
-for mcauser in $(echo "dis chlauth(*)" | runmqsc $qmgr | tr "()" " " | awk '$1~/MCAUSER/ {print $2}' | sort -u)
-do
-  pswd=$(getent passwd $mcauser)
-  shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
-  if [ "$shell" != "nologin" ] | [ "$shell" != "false" ]
-    then
-    if [[ i -eq 0 ]]
-      then
-        echo "ERR failed shell is not set to 'nologin' on following mca users: "
-        echo -ne "\t$mcauser\n"
-        let i++
-      else
-        echo -ne "\t$mcauser\n"
-        let i++
-    fi
-  fi
-done
-
-if [[ i -eq 0 ]]
-  then
-    echo "OK"
-fi
-
-# ----------------------------------------------------------
-# 2.1   - check FS User  (AMQ6242E)
-# split this part into system and qmgr part
-# move system part to the top
-# move qmgr part into loop
+# 1.1   - check FS User  (AMQ6242E)
 # ----------------------------------------------------------
 i=0
 echo -ne "MQ filesystems Ownership\t....................... "
@@ -608,7 +523,6 @@ done
 # manual check on /home/mqm and /mq/log
 # ----------------------------------------------------------
 # /home/mqm
-# move home to top
 for fs in $(find /home/mqm ! -user mqm )
 do
   if [[ i -eq 0 ]]
@@ -622,7 +536,6 @@ do
 done
 
 # /mq/log
-# move log to loop & reconsidure to use /mq/log/$qmgr 
 for fs in $(find /mq/log ! -user mqm )
 do
   if [[ i -eq 0 ]]
@@ -641,28 +554,29 @@ if [[ i -eq 0 ]]
 fi
 
 # ----------------------------------------------------------
-# 2.2   - check FS Group  (AMQ6243E)
+# 1.2   - check FS Group  (AMQ6243E)
 # ----------------------------------------------------------
 i=0
-echo -ne "MQ filesystems Group\t....................... "
-#    for group in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
+echo -ne "MQ filesystems Group\t\t....................... "
+
 for group in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
 do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed Group is not set to 'mqm' on following FSs: "
-      echo -ne "\t$group\n"
-      let i++
-    else
-      echo -ne "\t$group\n"
-      let i++
+  if [[ "$group" != "'/var/mqm/errors'." ]] 
+  then
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed Group is not set to 'mqm' on following FSs: "
+        echo -ne "\t$group\n"
+        let i++
+      else
+        echo -ne "\t$group\n"
+        let i++
+    fi
   fi
 done
 
 # ----------------------------------------------------------
 # manual check on /home/mqm and /mq/log
-# move home to top
-# move /mq/log to loop, reconsidure /mq/log/$qmgr
 # ----------------------------------------------------------
 # /home/mqm
 for fs in $(find /home/mqm ! -group mqm )
@@ -696,10 +610,7 @@ if [[ i -eq 0 ]]
 fi
 
 # ----------------------------------------------------------
-# 2.3   - check FS Permission  (AMQ6244E)
-# split system and queue manager 
-# move system to top 
-# move qmgr to loop
+# 1.3   - check FS Permission  (AMQ6244E)
 # ----------------------------------------------------------
 i=0
 echo -ne "MQ filesystems Permission\t....................... "
@@ -719,8 +630,6 @@ done
 
 # ----------------------------------------------------------
 # manual check on /home/mqm and /mq/log
-# move home to top
-# move log to loop, reconsidure /mq/log/$qmgr
 # ----------------------------------------------------------
 # /home/mqm - G and O must not have W access
 for permission in $(find /home/mqm -perm /g=w,o=w )
@@ -736,7 +645,8 @@ do
 done
 
 # /home/mqm/.ssh - G and O must have no priviledge
-for permission in $(find /home/mqm/.ssh ! -perm 700 )
+# for permission in $(find /home/mqm/.ssh ! -perm 700 )
+for permission in $(find /home/mqm/.ssh -perm /g=rwx,o=rwx )
 do
   if [[ i -eq 0 ]]
     then
@@ -768,9 +678,9 @@ fi
 
 
 # ----------------------------------------------------------
-# 2.4   - check FS mountpoint
+# 1.4   - check FS mountpoint
 # ----------------------------------------------------------
-echo -ne "FS Mountpoints\t\t....................... "
+echo -ne "File System Mountpoints\t\t....................... "
 i=0
 
 # /opt/mqm
@@ -812,11 +722,100 @@ if [[ i -eq 0 ]]
     echo "OK"
 fi
 
+
+# ----------------------------------------------------------
+#   2.   - check every QMGR
+# ----------------------------------------------------------
+for qmgr in $(dspmq | tr "()" " " | awk '{print $2}')
+do
+{
+
+cat <<EOF
+ 
+################################################################################
+# QMGR CHECK $qmgr
+################################################################################
+EOF
+
+# ----------------------------------------------------------
+#   2.1   - check if mcauser set to 'dummy' on all RCVR chls
+# ----------------------------------------------------------
+i=0
+echo -ne "checking mcauser set to 'dummy' on RCVR chls\t....... "  
+for channel in $(echo "dis chl(*) chltype(rcvr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for the following channels: "
+      echo -ne "\t$channel\n"
+      let i++
+    else
+      echo -ne "\t$channel\n"
+  fi
+done
+
+if [[ -z "$channel" ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+#  2.2   - check if mcauser set to 'dummy' on all RQSTR chls
+# ----------------------------------------------------------
+i=0
+echo -ne "checking mcauser set to 'dummy' on RQSTR chls\t....... "  
+for channel in $(echo "dis chl(*) chltype(rqstr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+do
+  if [[ i -eq 0 ]]
+    then
+      echo "ERR failed for the following channels: "
+      echo -ne "\t$channel\n"
+      let i++
+    else
+      echo -ne "\t$channel\n"
+  fi
+done
+
+if [[ -z "$channel" ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 2.3   - check if MCAUSER in CHLAUTH has invalid shell
+# ----------------------------------------------------------
+i=0
+echo -ne "chlauth mcauser shell set to 'nologin'\t............... "  
+for mcauser in $(echo "dis chlauth(*)" | runmqsc $qmgr | tr "()" " " | awk '$1~/MCAUSER/ {print $2}' | sort -u)
+do
+  pswd=$(getent passwd $mcauser)
+  shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
+  if [ "$shell" != "nologin" ]
+    then
+    if [ "$shell" != "false" ]
+      then
+      if [[ i -eq 0 ]]
+        then
+          echo "ERR failed shell is not set to 'nologin' on following mca users: "
+          echo -ne "\t$mcauser\n"
+          let i++
+        else
+          echo -ne "\t$mcauser\n"
+          let i++
+      fi
+    fi
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
 # ----------------------------------------------------------
 # 3 - check Certificate in Keystore
-# move to loop
 # ----------------------------------------------------------
-echo -ne "Default certificate\t....................... "
+echo -ne "Default certificate\t\t....................... "
 certlabl=$(echo "dis QMGR CERTLABL" | runmqsc $qmgr   | tr "()" " " | awk '$1~/QMNAME/ {print $4}' )
 if [[ -z "$certlabl" ]]
   then
@@ -834,7 +833,7 @@ fi
 
 if [[ $certlabl != "$qmgr"_int ]]
   then
-    echo -ne "Internal certificate\t....................... "
+    echo -ne "Internal certificate\t\t....................... "
     label=$(/usr/bin/runmqakm -cert -list -stashed -db $sslkeyr.kdb | grep -E "$qmgr"_int )
     if [[ -z "$label" ]]
       then
@@ -845,4 +844,6 @@ if [[ $certlabl != "$qmgr"_int ]]
 fi
 # ----------------------------------------------------------
 
+} | $PAGER
+done
 
