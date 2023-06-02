@@ -1,6 +1,3 @@
-# mqmadm@syspmq4$ cat chkmqconfig.ksh
-# vmtestb2spocmq0339
-
 ################################################################################
 #
 # chkmqconfig.kshq
@@ -10,10 +7,55 @@
 ################################################################################
 #!/usr/bin/ksh
 
+################################################################################
+# Command line 
+################################################################################
 PAGER=cat
+SECTION=all
 
-[ -z "$1" ] || PAGER="$1"
+for ARG in $@
+do
+  case $ARG in
+    "-pager" )
+      opt="pager"
+      continue;;
+    "-section")
+      opt="section"
+      continue;;
+    *)
+  esac
 
+  case $opt in 
+    "pager"   ) PAGER=$ARG; ;;
+    "section" ) SECTION=$ARG; ;;
+  esac
+done
+
+case $PAGER in
+  cat)    ;;
+  less)   ;;
+  *)
+    echo "wrong pager $PAGER "
+    exit;;
+esac
+
+case $SECTION in
+  all);;
+  system);;
+  user);;
+  install);;
+  fs);;
+  *)
+    echo "wrong pager $SECTION "
+    exit;;
+esac
+
+########################################################
+
+if [[ $SECTION == 'all'    ||   \
+      $SECTION == 'system' ||   \
+      $SECTION == 'user'   ]]
+then
 {
 cat <<EOF
 ################################################################################
@@ -118,11 +160,12 @@ grp=${grp/mqmon/ }
 # ----------------------------------------------------------
 # check if mqm has other groups
 # ----------------------------------------------------------
-echo  -e "\tcheck other groups:"
+echo  -ne "\tcheck other groups "
 if [[ -z ${grp// } ]]
 then
-  echo ":OK"
+  echo -e "\t....................... OK"
 else
+  echo ""
   for sec in $(echo $grp)
   do
     echo -e "\t\tuser mqm in group $sec\t....... WAR"
@@ -132,12 +175,12 @@ fi
 # ----------------------------------------------------------
 # check if other user are in group mqm
 # ----------------------------------------------------------
-echo -en "\tcheck group mqm"
+echo -en "\tcheck group mqm\t\t"
 grp=$(getent group mqm | awk -F: '{print $4}' | tr -d " " )
 
 if [[ -z "$grp" ]]
 then
-  echo "...................... OK"
+  echo "....................... OK"
   else
     echo " :"
     for member in $(echo $grp | tr "," " " )
@@ -169,7 +212,7 @@ fi
 # ----------------------------------------------------------
 shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
 echo -en "\tmcaadm shell\t\t....................... "
-if [[ $shell = "nologin" ]]
+if [[ $shell = "nologin" || $shell = "false" ]]
 then
   echo "OK"
 else
@@ -324,7 +367,7 @@ grp=${grp/systemd-journal/ }
 echo -en "\tmqmon group member"
 if [[ -z ${grp// } ]]
 then
-  echo -e "\t................... OK"
+  echo -e "\t....................... OK"
 else
   for member in $(echo $grp)
   do
@@ -333,7 +376,12 @@ else
   echo ""
 fi
 } |$PAGER
+fi
 
+if [[ $SECTION == 'all'    ||   \
+      $SECTION == 'system' ||   \
+      $SECTION == 'install'   ]]
+then
 {
 cat <<EOF
 ################################################################################
@@ -474,39 +522,22 @@ do
 done
 
 } | $PAGER
+fi
 
+if [[ $SECTION == 'all'    ||   \
+      $SECTION == 'system' ||   \
+      $SECTION == 'fs'   ]]
+then
+{
 cat <<EOF
 ################################################################################
-# MQ CHECK 
+# FILE SYSTEM CHECK
 ################################################################################
 EOF
 
-  # 1. check file systems (must be own FS, credentials, size)
-  # 1.1 data
-  # 1.2 log
-  # 1.3 var
-  # 1.4 opt
-  # 1.5 home
-
-  # for every QM
-  # 2.  - get all RCVR & SVRCONN chls
-  # 2.1 - check if mcauser set to 'dummy'
-  # 2.2 - check if CHLAUTH exists
-  # 2.3 - check if MCAUSER in CHLAUTH has unvalid shell
-
-  # 3. certifcates
-  # 3.1 certlabl must exist
-  # 3.2 internal must exist
-  # 3.3 CA's must exist (depends on environment)
-
-
-# ----------------------------------------------------------
-# 1.1   - check FS User  (AMQ6242E)
-# ----------------------------------------------------------
 i=0
 echo -ne "MQ filesystems Ownership\t....................... "
-#    for ownership in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6242E:/ {print $4}')
-for ownership in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6242E:/ {print $5}')
+for ownership in $(crtmqdir -s 2>&1 | tr "()" " " | awk '$1~/AMQ6242E:/ {print $5}')
 do
   if [[ i -eq 0 ]]
     then
@@ -552,7 +583,9 @@ if [[ i -eq 0 ]]
   then
     echo "OK"
 fi
+} | $PAGER
 
+fi
 # ----------------------------------------------------------
 # 1.2   - check FS Group  (AMQ6243E)
 # ----------------------------------------------------------
