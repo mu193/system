@@ -25,8 +25,6 @@ QMGR=$2
 # ------------------------------------------------------------------------------
 # commands
 # ------------------------------------------------------------------------------
-HARES="/opt/VRTSvcs/bin/hares" 
-VCSMQ="/usr/local/bin/vcsmq" 
 SYSCTL="/usr/bin/systemctl"
 DSPMQ="/usr/bin/dspmq"
 XAPASS="/home/mqm/bin/xapass.pl"
@@ -66,12 +64,8 @@ case ${CMD} in
   # stop queue manager
   # --------------------------------------------------------
   "-stop")
-    if [[ -f "${HARES}" ]]
-    then
-      sudo ${VCSMQ} ${QMGR} -offline
-    else
       ${SYSCTL} --user stop mq@${QMGR}.service
-    fi ;;
+       ;;
 
   # --------------------------------------------------------
   # force stop queue manager
@@ -84,13 +78,8 @@ case ${CMD} in
   # start queue manager
   # --------------------------------------------------------
   "-start")
-    if [[ -f "${HARES}" ]]
-    then
-      ${XAPASS} -qmgr ${QMGR} -cfg /mq/data/${QMGR}/vcs.env
-      sudo ${VCSMQ} ${QMGR} -online
-    else
       ${SYSCTL} --user start mq@${QMGR}.service
-    fi ;;
+       ;;
 
   # --------------------------------------------------------
   # force start queue manager
