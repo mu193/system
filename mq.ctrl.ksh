@@ -27,7 +27,6 @@ QMGR=$2
 # ------------------------------------------------------------------------------
 SYSCTL="/usr/bin/systemctl"
 DSPMQ="/usr/bin/dspmq"
-XAPASS="/home/mqm/bin/xapass.pl"
 
 # ------------------------------------------------------------------------------
 # main
@@ -92,7 +91,7 @@ case ${CMD} in
   # wrong call
   # --------------------------------------------------------
   *)
-    echo "$0 [-start | -stop | -fstart | -fstop] $QMGR"
+    echo "$0 [-start | -stop] $QMGR"
     exit 1 ;
 
 esac;
