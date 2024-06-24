@@ -34,10 +34,11 @@ QMGRSTATE=$?
 #-------------------------------
 [ -d /mq/data/${QMGR}/qm.ini.d ] || mkdir /mq/data/${QMGR}/qm.ini.d
 [ -d /mq/data/${QMGR}/mqsc.d   ] || mkdir /mq/data/${QMGR}/mqsc.d
-${CP} ${HOME}/cfg/global.qm.chl.ini     /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.errlog.ini  /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.fs.ini      /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.ssl.ini     /mq/data/${QMGR}/qm.ini.d
+[ -d /mq/data/${QMGR}/vara     ] || mkdir /mq/data/${QMGR}/vara
+${CP} ${HOME}/cfg/global.qm.chl.ini    /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.errlog.ini /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.fs.ini     /mq/data/${QMGR}/qm.ini.d
+${CP} ${HOME}/cfg/global.qm.ssl.ini    /mq/data/${QMGR}/qm.ini.d
 
 #-------------------------------
 # create {QMGR}.profile
