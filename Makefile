@@ -23,3 +23,5 @@ cert.tar : Clearstream_Banking_CA_2.crt BAT_Clearstream_CA.pub               \
            TEST_Deutsche_Boerse_AG_CA.crt TEST_Deutsche_Boerse_Group_Root_CA.crt
 	tar cf $@ $^ 
 
+clean: 
+	rm mqinstaller
