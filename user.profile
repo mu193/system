@@ -23,6 +23,7 @@ export MQPROMPT="+QMNAME+> "
 # ------------------------------------------------------------------------------
 export PATH=$HOME/.bin:$PATH:$HOME/bin:.
 export CDPATH=.:$HOME
+export MANPATH=$MANPATH:$(dspmqver -f 128 -b)/man 
 
 set -o vi
 
