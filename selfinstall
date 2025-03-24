@@ -28,7 +28,7 @@ ${RM} ${FILE}
 
 # own code 
 ${CD} ${TMP}
-./installer $@
+bash ./installer $@
 rc=$?
 
 if [[ $rc -eq 1 ]] 
