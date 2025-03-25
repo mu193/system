@@ -2,6 +2,8 @@
 /mq/data/\w+/errors/AMQERR\*\.LOG    pull 
 /mq/data/\w+/errors/AMQERR\d\d\.json pull 
 /mq/data/\w+/errors/AMQERR\*\.json   pull 
+/mq/data/\w+/errors/\w+\.cpu\.\d+\.stat pull
+/mq/data/\w+/errors/\w+\.cpu\.\*\.stat pull
 /mq/data/\w+/qm.ini                  pull
 /var/mqm/mqs.ini                     pull
 /var/mqm/errors/AMQ.+                pull
