@@ -4,8 +4,12 @@ my $qmgr = $ARGV[0] ;
 die "qmgr not set" unless defined $qmgr ;
 shift @ARGV ;
 
-my $path =  $ARGV[0] ;
-die "qmgr not set" unless defined $qmgr ;
+my $out =  $ARGV[0] ;
+shift @ARGV ;
+die "output directory not set" unless defined $qmgr ;
+
+my $bin =  $ARGV[0] ;
+die "bin directory not set" unless defined $qmgr ;
 
 use strict ;
 
@@ -14,7 +18,7 @@ use IPC::Open2 ;           # for runmqsc starting in the background
 use POSIX ":sys_wait_h" ;  # for no hang on runmqsc in the background
 use Time::HiRes qw(usleep) ;
 
-my $amqsru = "/opt/mqm/942a/samp/bin/amqsrua " ;
+my $amqsru = "$bin/amqsrua " ;
 
 
 my $wr = FileHandle->new() ;
@@ -64,7 +68,7 @@ while ( my $line = <$rd> )
   
   if( $line =~ /^\s*$/ )
   {
-    open FD, ">>", "$path/$qmgr.cpu.$date.stat" ;
+    open FD, ">>", "$out/$qmgr.cpu.$date.stat" ;
     print FD "$date $time $sysCPU $usrCPU $ram\n" ;
     close FD ;
     next ;
