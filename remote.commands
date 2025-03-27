@@ -1,6 +1,7 @@
 <command>
   <exec>
     df
+    dspmqcert
     getent
     du
     id
