@@ -22,6 +22,14 @@ do
     "-section")
       opt="section"
       continue;;
+    "-help" )
+cat <<EOF
+    call via:
+      chkmqconfig.ksh
+        -pager [less|more]
+        -section [all|system|user|install|fs]
+EOF
+      exit;;
     *)
   esac
 
@@ -770,12 +778,17 @@ cat <<EOF
 ################################################################################
 EOF
 
+runmqsc=$(dspmq -m $qmgr -o installation |\
+             tr " " "\n"                 |\
+             tr "()" " "                 |\
+             awk '$1~/INSTPATH/ {print $2"/bin/runmqsc"}')
+
 # ----------------------------------------------------------
 #   2.1   - check if mcauser set to 'dummy' on all RCVR chls
 # ----------------------------------------------------------
 i=0
 echo -ne "checking mcauser set to 'dummy' on RCVR chls\t....... "  
-for channel in $(echo "dis chl(*) chltype(rcvr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+for channel in $(echo "dis chl(*) chltype(rcvr) where(mcauser ne 'dummy')" | $runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
 do
   if [[ i -eq 0 ]]
     then
@@ -797,7 +810,7 @@ fi
 # ----------------------------------------------------------
 i=0
 echo -ne "checking mcauser set to 'dummy' on RQSTR chls\t....... "  
-for channel in $(echo "dis chl(*) chltype(rqstr) where(mcauser ne 'dummy')" | runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
+for channel in $(echo "dis chl(*) chltype(rqstr) where(mcauser ne 'dummy')" | $runmqsc $qmgr | tr "()" " " | awk '$1~/CHANNEL/ {print $2}' )
 do
   if [[ i -eq 0 ]]
     then
@@ -815,11 +828,41 @@ if [[ -z "$channel" ]]
 fi
 
 # ----------------------------------------------------------
-# 2.3   - check if MCAUSER in CHLAUTH has invalid shell
+# 2.3.1   - check if MCAUSER in CHLAUTH exists
+# ----------------------------------------------------------
+i=0
+echo -ne "chlauth mcauser exists \t\t....................... "
+for mcauser in $(echo "dis chlauth(*)" | $runmqsc $qmgr                |\
+                                         tr "()" " "                   |\
+                                         awk '$1~/MCAUSER/ {print $2}' |\
+                                         sort -u)
+do
+  pswd=$(getent passwd $mcauser)
+  if [ $? -gt 0 ]
+  then
+    if [[ i -eq 0 ]]
+    then
+      echo "ERR following user don't exist:"
+      echo -ne "\t$mcauser\n"
+      let i++
+    else
+      echo -ne "\t$mcauser\n"
+      let i++
+    fi
+  fi
+done
+
+if [[ i -eq 0 ]]
+  then
+    echo "OK"
+fi
+
+# ----------------------------------------------------------
+# 2.3.2   - check if MCAUSER in CHLAUTH has invalid shell
 # ----------------------------------------------------------
 i=0
 echo -ne "chlauth mcauser shell set to 'nologin'\t............... "  
-for mcauser in $(echo "dis chlauth(*)" | runmqsc $qmgr | tr "()" " " | awk '$1~/MCAUSER/ {print $2}' | sort -u)
+for mcauser in $(echo "dis chlauth(*)" | $runmqsc $qmgr | tr "()" " " | awk '$1~/MCAUSER/ {print $2}' | sort -u)
 do
   pswd=$(getent passwd $mcauser)
   shell=$(basename $(echo $pswd | awk -F: '{print $7}'))
