@@ -893,14 +893,17 @@ fi
 # 3 - check Certificate in Keystore
 # ----------------------------------------------------------
 echo -ne "Default certificate\t\t....................... "
-certlabl=$(echo "dis QMGR CERTLABL" | $runmqsc $qmgr |\
+certlabl=$(echo "dis QMGR CERTLABL" | $runmqsc $qmgr            |\
                                       tr " " "\n" | tr "()" " " |\
-                                      awk '$1~/QMNAME/ {print $4}' )
+                                      awk '$1~/CERTLABL"/ {print $2}' )
 if [[ -z "$certlabl" ]]
   then
     echo "ERR failed CERTLABL not set in QMGR configuration"
   else
-    sslkeyr=$(echo "dis QMGR SSLKEYR" | runmqsc $qmgr   | tr "()" " " | awk '$1~/QMNAME/ {print $4}' )
+    sslkeyr=$(echo "dis QMGR SSLKEYR" | $runmqsc $qmgr          |\
+                                      tr " " "\n" | tr "()" " " |\
+                                      awk '$1~/SSLKEYR/ {print $2}' )
+
     label=$(/usr/bin/runmqakm -cert -list -stashed -db $sslkeyr.kdb | grep -E "$certlabl" )
     if [[ -z "$label" ]]
       then
