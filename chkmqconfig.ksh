@@ -543,226 +543,227 @@ cat <<EOF
 ################################################################################
 EOF
 
-i=0
-echo -ne "MQ filesystems Ownership\t....................... "
-for ownership in $(crtmqdir -s 2>&1 | tr "()" " " | awk '$1~/AMQ6242E:/ {print $5}')
-do
+  i=0
+  echo -ne "MQ filesystems Ownership\t....................... "
+  for ownership in $(crtmqdir -s 2>&1 | tr "()" " " | awk '$1~/AMQ6242E:/ {print $5}')
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed User is not set to 'mqm' on following FSs: "
+        echo -ne "\t$ownership\n"
+        let i++
+      else
+        echo -ne "\t$ownership\n"
+        let i++
+    fi
+  done
+
+  # --------------------------------------------------------
+  # manual check on /home/mqm and /mq/log
+  # --------------------------------------------------------
+  # /home/mqm
+  for fs in $(find /home/mqm ! -user mqm )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t$fs\n"
+        let i++
+      else
+        echo -ne "\t$fs\n"
+    fi
+  done
+  
+  # /mq/log
+  for fs in $(find /mq/log ! -user mqm )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t$fs\n"
+        let i++
+      else
+        echo -ne "\t$fs\n"
+    fi
+  done
+  
   if [[ i -eq 0 ]]
     then
-      echo "ERR failed User is not set to 'mqm' on following FSs: "
-      echo -ne "\t$ownership\n"
-      let i++
-    else
-      echo -ne "\t$ownership\n"
-      let i++
+      echo "OK"
   fi
-done
 
-# ----------------------------------------------------------
-# manual check on /home/mqm and /mq/log
-# ----------------------------------------------------------
-# /home/mqm
-for fs in $(find /home/mqm ! -user mqm )
-do
+  # --------------------------------------------------------
+  # 1.2   - check FS Group  (AMQ6243E)
+  # --------------------------------------------------------
+  i=0
+  echo -ne "MQ filesystems Group\t\t....................... "
+  
+  for group in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
+  do
+    if [[ "$group" != "'/var/mqm/errors'." ]] 
+    then
+      if [[ i -eq 0 ]]
+        then
+          echo "ERR failed Group is not set to 'mqm' on following FSs: "
+          echo -ne "\t$group\n"
+          let i++
+        else
+          echo -ne "\t$group\n"
+          let i++
+      fi
+    fi
+  done
+
+  # --------------------------------------------------------
+  # manual check on /home/mqm and /mq/log
+  # --------------------------------------------------------
+  # /home/mqm
+  for fs in $(find /home/mqm ! -group mqm )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t$fs\n"
+        let i++
+      else
+        echo -ne "\t$fs\n"
+    fi
+  done
+
+  # /mq/log
+  for fs in $(find /mq/log ! -group mqm )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed for following FSs: "
+        echo -ne "\t$fs\n"
+        let i++
+      else
+        echo -ne "\t$fs\n"
+    fi
+  done
+  
   if [[ i -eq 0 ]]
     then
-      echo "ERR failed for following FSs: "
-      echo -ne "\t$fs\n"
-      let i++
-    else
-      echo -ne "\t$fs\n"
+      echo "OK"
   fi
-done
 
-# /mq/log
-for fs in $(find /mq/log ! -user mqm )
-do
-  if [[ i -eq 0 ]]
+  # --------------------------------------------------------
+  # 1.3   - check FS Permission  (AMQ6244E)
+  # --------------------------------------------------------
+  i=0
+  echo -ne "MQ filesystems Permission\t....................... "
+  #    for permission in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
+  for permission in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed Permission is not set correctly on following FSs: "
+        echo -ne "\t$permission\n"
+        let i++
+      else
+        echo -ne "\t$permission\n"
+        let i++
+    fi
+  done
+
+  # --------------------------------------------------------
+  # manual check on /home/mqm and /mq/log
+  # --------------------------------------------------------
+  # /home/mqm - G and O must not have W access
+  for permission in $(find /home/mqm -perm /g=w,o=w )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed Permission is not set correctly on following FSs: "
+        echo -ne "\t$permission\n"
+        let i++
+      else
+        echo -ne "\t$permission\n"
+    fi
+  done
+
+
+  # /home/mqm/.ssh - G and O must have no priviledge
+  # for permission in $(find /home/mqm/.ssh ! -perm 700 )
+  for permission in $(find /home/mqm/.ssh -perm /g=rwx,o=rwx )
+  do
+    if [[ i -eq 0 ]]
+      then
+        echo "ERR failed Permission is not set correctly on following FSs: "
+        echo -ne "\t$permission\n"
+        let i++
+      else
+        echo -ne "\t$permission\n"
+    fi
+  done
+
+
+  # /mq/log - O must have no priviledge
+  for permission in $(find /mq/log -perm /o=rwx )
+  do
+    if [[ i -eq 0 ]]
     then
-      echo "ERR failed for following FSs: "
-      echo -ne "\t$fs\n"
+      echo "ERR failed Permission is not set correctly on following FSs: "
+      echo -ne "\t$permission\n"
       let i++
     else
-      echo -ne "\t$fs\n"
-  fi
-done
-
-if [[ i -eq 0 ]]
+      echo -ne "\t$permission\n"
+    fi
+  done
+  
+  if [[ i -eq 0 ]]
   then
     echo "OK"
-fi
+  fi
+
+  # --------------------------------------------------------
+  # 1.4   - check FS mountpoint
+  # --------------------------------------------------------
+  echo -ne "File System Mountpoints\t\t....................... "
+  i=0
+  
+  # /opt/mqm
+  if [[ $(df -m /opt/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
+    then
+      echo "ERR failed for following FSs: "
+      echo -ne "\t/opt/mqm\n"
+      let i++
+  fi
+
+  # /home/mqm
+  if [[ $(df -m /home/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
+    then
+      if [[ i -eq 0 ]]
+        then
+          echo "ERR failed for following FSs: "
+          echo -ne "\t/home/mqm\n"
+          let i++
+        else
+          echo -ne "\t/home/mqm\n"
+      fi
+  fi
+  
+  # /mq/log
+  if [[ $(df -m /mq/log | awk '$1~/dev/ {print $6}' )  == "/" ]]
+  then
+      if [[ i -eq 0 ]]
+        then
+          echo "ERR failed for following FSs: "
+          echo -ne "\t/mq/log\n"
+          let i++
+        else
+          echo -ne "\t/mq/log\n"
+      fi
+  fi
+  
+  if [[ i -eq 0 ]]
+    then
+      echo "OK"
+  fi
+
 } | $PAGER
-
 fi
-# ----------------------------------------------------------
-# 1.2   - check FS Group  (AMQ6243E)
-# ----------------------------------------------------------
-i=0
-echo -ne "MQ filesystems Group\t\t....................... "
-
-for group in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6243E:/ {print $6}')
-do
-  if [[ "$group" != "'/var/mqm/errors'." ]] 
-  then
-    if [[ i -eq 0 ]]
-      then
-        echo "ERR failed Group is not set to 'mqm' on following FSs: "
-        echo -ne "\t$group\n"
-        let i++
-      else
-        echo -ne "\t$group\n"
-        let i++
-    fi
-  fi
-done
-
-# ----------------------------------------------------------
-# manual check on /home/mqm and /mq/log
-# ----------------------------------------------------------
-# /home/mqm
-for fs in $(find /home/mqm ! -group mqm )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed for following FSs: "
-      echo -ne "\t$fs\n"
-      let i++
-    else
-      echo -ne "\t$fs\n"
-  fi
-done
-
-# /mq/log
-for fs in $(find /mq/log ! -group mqm )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed for following FSs: "
-      echo -ne "\t$fs\n"
-      let i++
-    else
-      echo -ne "\t$fs\n"
-  fi
-done
-
-if [[ i -eq 0 ]]
-  then
-    echo "OK"
-fi
-
-# ----------------------------------------------------------
-# 1.3   - check FS Permission  (AMQ6244E)
-# ----------------------------------------------------------
-i=0
-echo -ne "MQ filesystems Permission\t....................... "
-#    for permission in $(crtmqdir -a 2>&1 | awk 'NR%2{printf"%s ",$0;next}2' | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
-for permission in $(crtmqdir -a 2>&1 | tr "()" " " | awk '$1~/AMQ6244E:/ {print $6}')
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed Permission is not set correctly on following FSs: "
-      echo -ne "\t$permission\n"
-      let i++
-    else
-      echo -ne "\t$permission\n"
-      let i++
-  fi
-done
-
-# ----------------------------------------------------------
-# manual check on /home/mqm and /mq/log
-# ----------------------------------------------------------
-# /home/mqm - G and O must not have W access
-for permission in $(find /home/mqm -perm /g=w,o=w )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed Permission is not set correctly on following FSs: "
-      echo -ne "\t$permission\n"
-      let i++
-    else
-      echo -ne "\t$permission\n"
-  fi
-done
-
-# /home/mqm/.ssh - G and O must have no priviledge
-# for permission in $(find /home/mqm/.ssh ! -perm 700 )
-for permission in $(find /home/mqm/.ssh -perm /g=rwx,o=rwx )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed Permission is not set correctly on following FSs: "
-      echo -ne "\t$permission\n"
-      let i++
-    else
-      echo -ne "\t$permission\n"
-  fi
-done
-
-# /mq/log - O must have no priviledge
-for permission in $(find /mq/log -perm /o=rwx )
-do
-  if [[ i -eq 0 ]]
-    then
-      echo "ERR failed Permission is not set correctly on following FSs: "
-      echo -ne "\t$permission\n"
-      let i++
-    else
-      echo -ne "\t$permission\n"
-  fi
-done
-
-if [[ i -eq 0 ]]
-  then
-    echo "OK"
-fi
-
-
-# ----------------------------------------------------------
-# 1.4   - check FS mountpoint
-# ----------------------------------------------------------
-echo -ne "File System Mountpoints\t\t....................... "
-i=0
-
-# /opt/mqm
-if [[ $(df -m /opt/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
-  then
-    echo "ERR failed for following FSs: "
-    echo -ne "\t/opt/mqm\n"
-    let i++
-fi
-
-# /home/mqm
-if [[ $(df -m /home/mqm | awk '$1~/dev/ {print $6}' ) == "/" ]]
-  then
-    if [[ i -eq 0 ]]
-      then
-        echo "ERR failed for following FSs: "
-        echo -ne "\t/home/mqm\n"
-        let i++
-      else
-        echo -ne "\t/home/mqm\n"
-    fi
-fi
-
-# /mq/log
-if [[ $(df -m /mq/log | awk '$1~/dev/ {print $6}' )  == "/" ]]
-  then
-    if [[ i -eq 0 ]]
-      then
-        echo "ERR failed for following FSs: "
-        echo -ne "\t/mq/log\n"
-        let i++
-      else
-        echo -ne "\t/mq/log\n"
-    fi
-fi
-
-if [[ i -eq 0 ]]
-  then
-    echo "OK"
-fi
-
 
 # ----------------------------------------------------------
 #   2.   - check every QMGR
