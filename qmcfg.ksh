@@ -37,11 +37,11 @@ CFG_INI=${CFG}/qm.ini.d/
 CFG_MQSC=${CFG}/mqsc.d/
 CFG_SSL=${CFG}/ssl/
 [ $(df -h /mq | awk '{if(FNR>1) print $6}') == '/mq' ] && \
-{                         \
-  CFG=/mq/etc/${QMGR}   ; \
-  CFG_INI=${CFG}/ini    ; \
-  CFG_MQSC=${CFG}/mqsc/ ; \
-  CFG_SSL={$CFG}/ssl/   ; \
+{                                \
+  CFG=/mq/etc/                 ; \
+  CFG_INI=${CFG}/ini/${QMGR}   ; \
+  CFG_MQSC=${CFG}/mqsc/${QMGR} ; \
+  CFG_SSL={$CFG}/ssl/${QMGR}   ; \
 } 
 
 

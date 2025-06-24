@@ -1,4 +1,4 @@
-SRC = strmqm endmqm mq@.service user@.service editrc       \
+SRC = strmqm endmqm mq@.service user@.service editrc vimrc \
       mq.ctrl.ksh xapass.pl dlh.ksh qmcfg.ksh              \
       mq.serv.exec.ksh chkmqconfig.ksh cpumq.pl            \
       user.profile _QMGR_.profile service.env              \
