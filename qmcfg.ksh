@@ -41,7 +41,7 @@ CFG_SSL=${CFG}/ssl/
   CFG=/mq/etc/                 ; \
   CFG_INI=${CFG}/ini/${QMGR}   ; \
   CFG_MQSC=${CFG}/mqsc/${QMGR} ; \
-  CFG_SSL={$CFG}/ssl/${QMGR}   ; \
+  CFG_SSL=${CFG}/ssl/${QMGR}   ; \
 } 
 
 
