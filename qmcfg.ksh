@@ -42,6 +42,9 @@ CFG_SSL=${CFG}/ssl/
   CFG_INI=${CFG}/ini/${QMGR}   ; \
   CFG_MQSC=${CFG}/mqsc/${QMGR} ; \
   CFG_SSL=${CFG}/ssl/${QMGR}   ; \
+  echo "ALTER QMGR CERTLABL('${QMGR}_int')"            >${CFG_MQSC}/qmgr.ssl.mqsc
+  echo "ALTER QMGR SSLKEYR('/mq/etc/ssl/${QMGR}/key')">>${CFG_MQSC}/qmgr.ssl.mqsc
+
 } 
 
 
