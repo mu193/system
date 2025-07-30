@@ -30,15 +30,34 @@ QMGRSTATE=$?
  fi
 
 #-------------------------------
+# set the MQCFG variable
+#-------------------------------
+CFG=/mq/data/${QMGR}/
+CFG_INI=${CFG}/qm.ini.d/
+CFG_MQSC=${CFG}/mqsc.d/
+CFG_SSL=${CFG}/ssl/
+[ $(df -h /mq | awk '{if(FNR>1) print $6}') == '/mq' ] && \
+{                                \
+  CFG=/mq/etc/                 ; \
+  CFG_INI=${CFG}/ini/${QMGR}   ; \
+  CFG_MQSC=${CFG}/mqsc/${QMGR} ; \
+  CFG_SSL=${CFG}/ssl/${QMGR}   ; \
+  echo "ALTER QMGR CERTLABL('${QMGR}_int')"            >${CFG_MQSC}/qmgr.ssl.mqsc
+  echo "ALTER QMGR SSLKEYR('/mq/etc/ssl/${QMGR}/key')">>${CFG_MQSC}/qmgr.ssl.mqsc
+
+} 
+
+
+#-------------------------------
 # copy qm.ini files
 #-------------------------------
-[ -d /mq/data/${QMGR}/qm.ini.d ] || mkdir /mq/data/${QMGR}/qm.ini.d
-[ -d /mq/data/${QMGR}/mqsc.d   ] || mkdir /mq/data/${QMGR}/mqsc.d
-[ -d /mq/data/${QMGR}/vara     ] || mkdir /mq/data/${QMGR}/vara
-${CP} ${HOME}/cfg/global.qm.chl.ini    /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.errlog.ini /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.fs.ini     /mq/data/${QMGR}/qm.ini.d
-${CP} ${HOME}/cfg/global.qm.ssl.ini    /mq/data/${QMGR}/qm.ini.d
+[ -d ${CFG_INI}  ] || mkdir -p ${CFG_INI}  
+[ -d ${CFG_MQSC} ] || mkdir -p ${CFG_MQSC} 
+[ -d ${CFG_SSL}  ] || mkdir -p ${CFG_SSL}  
+${CP} ${HOME}/cfg/global.qm.chl.ini    ${CFG_INI}  
+${CP} ${HOME}/cfg/global.qm.errlog.ini ${CFG_INI}  
+${CP} ${HOME}/cfg/global.qm.fs.ini     ${CFG_INI}  
+${CP} ${HOME}/cfg/global.qm.ssl.ini    ${CFG_INI}  
 
 #-------------------------------
 # create {QMGR}.profile

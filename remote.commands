@@ -83,3 +83,9 @@
     ~/etc/.+
   </arg>
 </command>
+
+<command>
+  <exec>
+    /home/mqm/transfer/mqinstaller
+  </exec>
+</command>

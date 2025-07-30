@@ -50,6 +50,15 @@ esac
 [ -d $HOME/.config/systemd/user ] || mkdir -p $HOME/.config/systemd/user 
 [ -d /var/mqm/xa_traces  ] || mkdir /var/mqm/xa_traces  
 
+CFG=''
+[ $(df -h /mq | awk '{if(FNR>1) print $6}') == '/mq' ] && \
+{                                          \
+  CFG='/mq/etc/'   ;                       \
+  [ -d $CFG/mqsc ] || mkdir -p $CFG/mqsc ; \
+  [ -d $CFG/ini  ] || mkdir -p $CFG/ini  ; \
+  [ -d $CFG/ssl  ] || mkdir -p $CFG/ssl  ; \
+}
+
 [ "$(id -un)" == "mqm"   ]   &&    \
 {                                  \
   [ -d /home/mqm/dlq.rules ] ||    \
@@ -69,8 +78,9 @@ esac
 rm $HOME/bin/chkconfig.ksh 
 
 touch $HOME/.profile.d/empty
-cp user.profile   $HOME/.profile 
-cp editrc         $HOME/.editrc
+cp user.profile $HOME/.profile 
+cp editrc       $HOME/.editrc
+cp vimrc        $HOME/.vimrc
 
 cp _QMGR_.profile   $HOME/qmgr.profile
 cp user@.service    $HOME/system
