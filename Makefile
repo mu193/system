@@ -1,5 +1,5 @@
 SRC = strmqm endmqm mq@.service user@.service editrc       \
-      mq.ctrl.ksh xapass.pl dlh.ksh qmcfg.ksh              \
+      mq.ctrl.ksh xapass.pl dlh.ksh qmcfg.ksh createQmgr   \
       mq.serv.exec.ksh chkmqconfig.ksh cpumq.pl            \
       user.profile _QMGR_.profile service.env              \
       scp.own  sscmd.own remote.commands  remote.transfer  \
