@@ -91,6 +91,7 @@ cp cpumq.pl         $HOME/bin
 cp strmqm           $HOME/.bin 
 cp endmqm           $HOME/.bin 
 cp mq.serv.exec.ksh $HOME/.bin 
+cp createQmgr       $HOME/.bin 
 cp service.env      /var/mqm/
 cp global.qm.ssl.ini    $HOME/cfg
 cp global.qm.fs.ini     $HOME/cfg

@@ -1,0 +1,9 @@
+#!/usr/bin/ksh
+
+[ -z "${1}" ] && { echo "QMGR Name missing" ; exit 1 ; }
+
+QMGR=$1
+
+echo "crtmqm -md /mq/data -ld /mq/log -ii /mq/etc/ini/${QMGR} -ic /mq/etc/mqsc/${QMGR} -oa user -q -lf 16384 -lp 16 -ls 8 -lla ${QMGR}"
+
+
