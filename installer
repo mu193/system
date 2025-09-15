@@ -87,7 +87,9 @@ cp user@.service    $HOME/system
 cp mq.ctrl.ksh      $HOME/bin
 cp xapass.pl        $HOME/bin 
 cp chkmqconfig.ksh  $HOME/bin 
+cp createQmgr       $HOME/bin 
 cp cpumq.pl         $HOME/bin 
+cp createQmgr       $HOME/.bin 
 cp strmqm           $HOME/.bin 
 cp endmqm           $HOME/.bin 
 cp mq.serv.exec.ksh $HOME/.bin 
@@ -106,9 +108,11 @@ cp remote.transfer  $HOME/.ssh/remote.transfer ; chmod 600 $HOME/.ssh/remote.tra
 
 # ----------------------------------------------------------
 # cp mq@.service $HOME/.config/systemd/user is not ok
-# adjust mqm to real user with pearl
+# adjust mqm to real user with perl
 # ----------------------------------------------------------
 perl -e 'open IN, $ARGV[0]; while(<IN>) {s/\/mqm\//\/$ARGV[1]\//; print $_;}' mq@.service $(id -un) > $HOME/.config/systemd/user/mq@.service
+
+source $HOME/.profile 
 systemctl --user daemon-reload
 
 exit 0
