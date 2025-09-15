@@ -895,7 +895,7 @@ fi
 echo -ne "Default certificate\t\t....................... "
 certlabl=$(echo "dis QMGR CERTLABL" | $runmqsc $qmgr            |\
                                       tr " " "\n" | tr "()" " " |\
-                                      awk '$1~/CERTLABL"/ {print $2}' )
+                                      awk '$1~/CERTLABL/ {print $2}' )
 if [[ -z "$certlabl" ]]
   then
     echo "ERR failed CERTLABL not set in QMGR configuration"

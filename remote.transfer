@@ -12,6 +12,7 @@
 ~/transfer/.+                        pull 
 ~/transfer/                          push right=600 
 ~/transfer/keysetter                 push right=700 
+~/transfer/mqinstaller               push right=700 
 /tmp/.+                              pull 
 /tmp/                                push right=644
 /etc/[^\/]+                          pull
