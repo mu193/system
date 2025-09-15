@@ -88,10 +88,10 @@ cp mq.ctrl.ksh      $HOME/bin
 cp xapass.pl        $HOME/bin 
 cp chkmqconfig.ksh  $HOME/bin 
 cp cpumq.pl         $HOME/bin 
+cp createQmgr       $HOME/.bin 
 cp strmqm           $HOME/.bin 
 cp endmqm           $HOME/.bin 
 cp mq.serv.exec.ksh $HOME/.bin 
-cp createQmgr       $HOME/.bin 
 cp service.env      /var/mqm/
 cp global.qm.ssl.ini    $HOME/cfg
 cp global.qm.fs.ini     $HOME/cfg
