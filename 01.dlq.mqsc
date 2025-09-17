@@ -1,0 +1,17 @@
+DEFINE QLOCAL(DEAD.LETTER.QUEUE)           +
+       LIKE(SYSTEM.DEAD.LETTER.QUEUE)      +
+       DESCR('AID2031: DEAD LETTER QUEUE') +
+       MAXFSIZE(1024)                      + 
+       REPLACE
+
+ALTER QMGR  +
+      DEADQ(DEAD.LETTER.QUEUE)      
+
+ALTER CHANNEL(SYSTEM.DEF.SENDER) +
+      CHLTYPE(SDR) +
+      USEDLQ(NO)   
+     
+ALTER CHANNEL(SYSTEM.DEF.RECEIVER) +
+      CHLTYPE(RCVR)                +
+      USEDLQ(NO)   
+
