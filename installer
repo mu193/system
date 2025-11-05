@@ -98,6 +98,7 @@ cp global.qm.ssl.ini    $HOME/cfg
 cp global.qm.fs.ini     $HOME/cfg
 cp global.qm.chl.ini    $HOME/cfg
 cp global.qm.errlog.ini $HOME/cfg
+cp 01.dlq.mqsc      $HOME/cfg
 cp cert.tar         $HOME/cfg
 cp version          $HOME/etc/mqcfg.version
 cp qmcfg.ksh        $HOME/bin

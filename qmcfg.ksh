@@ -69,8 +69,9 @@ ${CP} ${HOME}/cfg/global.qm.ssl.ini    ${CFG_INI}
 
 [ -d ${CFG}/mqsc/${QMGR} ] && \
 {
-  echo "ALTER QMGR CERTLABL('${QMGR}_int')"            >${CFG_MQSC}/qmgr.ssl.mqsc
-  echo "ALTER QMGR SSLKEYR('/mq/etc/ssl/${QMGR}/key')">>${CFG_MQSC}/qmgr.ssl.mqsc
+  echo "ALTER QMGR CERTLABL('${QMGR}_int')"            >${CFG_MQSC}/00.qmgr.ssl.mqsc
+  echo "ALTER QMGR SSLKEYR('/mq/etc/ssl/${QMGR}/key')">>${CFG_MQSC}/00.qmgr.ssl.mqsc
+  cp $HOME/cfg/01.dlq.mqsc ${CFG_MQSC}/
 }
 
 #-------------------------------
