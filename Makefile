@@ -23,7 +23,8 @@ arch.tar.gz : $(SRC) installer cert.tar
 cert.tar : Clearstream_Banking_CA_2.crt BAT_Clearstream_CA.pub               \
            Deutsche_Boerse_AG_CA.crt Deutsche_Boerse_Group_Root_CA.crt       \
            TEST_Deutsche_Boerse_AG_CA.crt TEST_Deutsche_Boerse_Group_Root_CA.crt \
-           Test_Deutsche_Boerse_AG_EJBCA_CA.crt
+           Test_Deutsche_Boerse_AG_EJBCA_CA.crt \
+	   Production_Deutsche_Boerse_AG_Issuing_EJBCA_CA.crt
 	tar cf $@ $^ 
 
 clean: 
